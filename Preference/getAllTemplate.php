@@ -1,7 +1,7 @@
 <?php
-define("APIKEY", "55ce5cde89b6d45d1624");
+define("APIKEY", "YourAPIKEY");
 define("URL", "https://www.dacast.com/backend/api/preferences/template");
-define("BID", "26708");
+define("BID", "YourBroadcasterID");
 
  main();
  
