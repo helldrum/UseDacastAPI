@@ -1,19 +1,20 @@
 <?php
 
 define("APIKEY", "YourAPIKey");
-define("URL", "https://www.dacast.com/backend/api/vod");
-define("BID", "YourBroadcasterId");
+define("URL", "https://www.dacast.com/backend/api/package");
+define("BID", "YouBroadcasterId");
 
 
 main();
 
 function main() {
-    $VOD_id = YourVOD_Id;
-    $rate_id = YourRate_Id;
+    $package_id = YourPackageID;
+    $rate_id = YourRateID;
 
-    $data = curlWrap("/" . $VOD_id . "/rate/" . $rate_id . "?bid=" . BID . "&apikey=" . APIKEY, null, "GET") or die("<p>can't return the data !<p>");
-
-    if (isset($data)) {
+    $data = curlWrap("/" . $package_id . "/rate/" . $rate_id . "?bid=" . BID . "&apikey=" . APIKEY, null, "GET") or die("<p>can't return the data !<p>");
+    if ($data->error->message != null) {
+        echo "<p>" . $data->error->message . "</p>";
+    } else {
         echo 'id : ' . $data->rate->id . '<br>';
         echo 'type : ' . $data->rate->type . '<br>';
         echo 'price : ' . $data->rate->price . '<br>';
