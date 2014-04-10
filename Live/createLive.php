@@ -15,7 +15,7 @@ function main() {
     $stream_category = urlencode('20');
     $publish_on_dacast = urlencode('1');
 
-    $data = curlWrap("/0?bid=26708&apikey=7c70028b237d85cda0cc&title=" . $title . "&description=" . $description . "&online=" . $online . "&stream_type=" . $stream_type . "&stream_category=" . $stream_category . "&publish_on_dacast=" . $publish_on_dacast, NULL, "POST");
+    $data = curlWrap("/0?bid=" . BID . "&apikey=" . APIKEY."&title=" . $title . "&description=" . $description . "&online=" . $online . "&stream_type=" . $stream_type . "&stream_category=" . $stream_category . "&publish_on_dacast=" . $publish_on_dacast, NULL, "POST");
 
 
     if ($data->error->message != null) {
