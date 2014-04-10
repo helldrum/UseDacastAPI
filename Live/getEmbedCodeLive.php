@@ -17,9 +17,8 @@ function main() {
     curl_setopt($ch, CURLOPT_USERAGENT, "MozillaXYZ/1.0");
 
     $output = curl_exec($ch);
-
-    curl_close($ch);
     $decoded = json_decode($output);
+    curl_close($ch);
 
     echo var_dump($decoded);
 }
