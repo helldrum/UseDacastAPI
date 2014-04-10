@@ -22,7 +22,7 @@ function main() {
         echo "<p>Error : " . $data->error->message . "</p>";
     } else {
         echo
-         '<p>live  created !<p>'
+        '<p>live  created !<p>'
         . '<lu> '
         . '<li> id : ' . $data->live->id . ' </li>'
         . '<li> title : ' . $data->live->title . ' </li>'
@@ -31,7 +31,7 @@ function main() {
         . '<li> stream_type : ' . $data->live->stream_type . '</li>'
         . '<li> stream_category : ' . $data->live->stream_category . ' </li>'
         . '<li> publish_on_dacast : ' . $data->live->publish_on_dacast . ' </li>'
-                . '</lu>';
+        . '</lu>';
     }
 }
 
