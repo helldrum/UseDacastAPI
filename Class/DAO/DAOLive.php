@@ -19,7 +19,7 @@ class DAOLive {
     private $_userSettings;
     private $_Currentlive;
     private $_fullUrlCall;
-    private $_allLive;
+    private $_allLive = array();
 
     function __construct($userSettings, $live) {
         if (isset($live)) {
@@ -59,6 +59,7 @@ class DAOLive {
                 $decoded = $this->_APICall->getJsonDecoded();
 
                 $this->convertDecodedJsonToLive($decoded);
+                return $this->_Currentlive;
             } else {
 
                 trigger_error("live_id = 0 use the function getAllLive instead.", E_USER_ERROR);
@@ -116,6 +117,71 @@ class DAOLive {
         }
     }
 
+    public function getAllLive() {
+        $this->_fullUrlCall = self::API_URL . "/" .
+                "0?bid=" . $this->_userSettings->getBroadcasterID() .
+                "&apikey=" . $this->_userSettings->getApiKey();
+        $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+        $this->_APICall->ApiRequest("GET", $this->_fullUrlCall);
+
+        $decoded = $this->_APICall->getJsonDecoded();
+
+        $this->convertDecodedJsonToArrayAllLive($decoded);
+
+        return $this->_allLive;
+    }
+
+    private function convertDecodedJsonToArrayAllLive($Arraydecoded) {
+        if (isset($Arraydecoded)) {
+            //var_dump($Arraydecoded);
+            foreach ($Arraydecoded['live'] as $i => $decoded) {
+                $this->_allLive[$i] = new Live();
+                $this->_allLive[$i]->setLiveId($decoded["id"]);
+                $this->_allLive[$i]->setTitle($decoded["title"]);
+                $this->_allLive[$i]->setDescription($decoded["description"]);
+                $this->_allLive[$i]->setCustom_data($decoded["custom_data"]);
+                $this->_allLive[$i]->setOnline($decoded["online"]);
+                $this->_allLive[$i]->setStream_type($decoded["stream_type"]);
+                $this->_allLive[$i]->setAcquisition($decoded["acquisition"]);
+                $this->_allLive[$i]->setHttp_url($decoded["http_url"]);
+                $this->_allLive[$i]->setStream_category($decoded["stream_category"]);
+                $this->_allLive[$i]->setCreationDate($decoded["creationDate"]);
+                $this->_allLive[$i]->setSaveDate($decoded["saveDate"]);
+                $this->_allLive[$i]->setUser_id($decoded["user_id"]);
+                $this->_allLive[$i]->setBandWidth($decoded["bandWidth"]);
+                $this->_allLive[$i]->setActivateChat($decoded["activateChat"]);
+                $this->_allLive[$i]->setAutoplay($decoded["autoplay"]);
+                $this->_allLive[$i]->setNoframe_security($decoded["noframe_security"]);
+                $this->_allLive[$i]->setEnable_ads($decoded["enable_ads"]);
+                $this->_allLive[$i]->setEnable_subscription($decoded["enable_subscription"]);
+                $this->_allLive[$i]->setEnable_payperview($decoded["enable_payperview"]);
+                $this->_allLive[$i]->setEnable_coupon($decoded["enable_coupon"]);
+                $this->_allLive[$i]->setIs_private($decoded["is_private"]);
+                $this->_allLive[$i]->setPublish_on_dacast($decoded["publish_on_dacast"]);
+                $this->_allLive[$i]->setSeo_index($decoded["seo_index"]);
+                $this->_allLive[$i]->setArchive_filename($decoded["archive_filename"]);
+                $this->_allLive[$i]->setCompanion_position($decoded["companion_position"]);
+                $this->_allLive[$i]->setTheme_id($decoded["theme_id"]);
+                $this->_allLive[$i]->setWatermark_position($decoded["watermark_position"]);
+                $this->_allLive[$i]->setWatermark_size($decoded["watermark_size"]);
+                $this->_allLive[$i]->setWatermark_url($decoded["watermark_url"]);
+                $this->_allLive[$i]->setId_player_size($decoded["id_player_size"]);
+                $this->_allLive[$i]->setPlayer_width($decoded["player_width"]);
+                $this->_allLive[$i]->setPlayer_height($decoded["player_height"]);
+                $this->_allLive[$i]->setReferers_id($decoded["referers_id"]);
+                $this->_allLive[$i]->setCountries_id($decoded["countries_id"]);
+                $this->_allLive[$i]->setThumbnail_id($decoded["thumbnail_id"]);
+                $this->_allLive[$i]->setSplashscreen_id($decoded["splashscreen_id"]);
+                $this->_allLive[$i]->setThumbnail_online($decoded["thumbnail_online"]);
+                $this->_allLive[$i]->setHds($decoded["hds"]);
+                $this->_allLive[$i]->setHls($decoded["hls"]);
+            }
+        } else {
+            $message = "Error :  no way to decode all Live json.";
+            return $message;
+        }
+    }
+
     public function getFullUrlCall() {
         return $this->_fullUrlCall;
     }
@@ -134,12 +200,6 @@ class DAOLive {
 
     public function setFullUrlCall($fullUrlCall) {
         $this->_fullUrlCall = $fullUrlCall;
-    }
-
-    public function getAllLive() {
-
-
-        return $this->_allLive;
     }
 
     public function deleteLiveById($live_id) {
@@ -161,11 +221,57 @@ class DAOLive {
                 $message = $decoded['message'];
             }
 
-
             return $message;
         } else {
             trigger_error("live_id is not numeric.", E_USER_ERROR);
         }
+    }
+
+    public function createNewLive($live) {
+
+        if ($live instanceof Live) {
+
+            $this->setCreateLiveURL(0, $live);
+
+            echo $this->_fullUrlCall;
+
+            $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+            $this->_APICall->ApiRequest("POST", $this->_fullUrlCall);
+
+            $decoded = $this->_APICall->getJsonDecoded();
+
+            $this->convertDecodedJsonToLive($decoded);
+
+            if (isset($decoded['error']['message'])) {
+                $message = "Error :  " . $decoded['error']['message'];
+                return $message;
+            }
+
+
+            return $this->_Currentlive;
+        } else {
+            trigger_error("live parameter is not a live object.", E_USER_ERROR);
+        }
+    }
+
+    private function setCreateLiveURL($live_id, $live) {
+        $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                "?bid=" . $this->_userSettings->getBroadcasterID() .
+                "&apikey=" . $this->_userSettings->getApiKey() .
+                "&title=" . urlencode($live->getTitle()) .
+                "&description=" . urlencode($live->getDescription()) .
+                "&custom_data=" . urlencode($live->getCustom_data()) .
+                "&stream_type=" . urlencode($live->getStream_type()) .
+                "&backup_url=" . urlencode($live->getBackup_url()) .
+                "&stream_category=" . urlencode($live->getStream_category()) .
+                "&activateChat=" . urlencode($live->getActivateChat()) .
+                "&autoplay=" . urlencode($live->getAutoplay()) .
+                "&publish_on_dacast=" . urlencode($live->getPublish_on_dacast()) .
+                "&external_video_page=" . urlencode($live->getExternal_video_page()) .
+                "&player_width=" . urlencode($live->getPlayer_width()) .
+                "&player_height=" . urlencode($live->getPlayer_height()) .
+                "&countries_id=" . urlencode($live->getCountries_id()) .
+                "&referers_id=" . urlencode($live->getReferers_id());
     }
 
 }
