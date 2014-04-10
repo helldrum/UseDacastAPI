@@ -54,22 +54,8 @@ class Live {
     private $hls;
     private $backup_url;
 
+    function __construct($id = 0, $title = 'default title', $description = 'default description', $custom_data = null, $online = 0, $stream_type = 1, $acquisition = null, $http_url = null, $stream_category = 20, $creationDate = null, $saveDate = null, $user_id = 0, $bandWidth = null, $activateChat = null, $autoplay = 1, $noframe_security = 2, $enable_ads = 0, $enable_subscription = 0, $enable_payperview = 0, $enable_coupon = 0, $is_private = 0, $publish_on_dacast = 1, $seo_index = 1, $archive_filename = null, $companion_position = "right", $theme_id = null, $watermark_position = 0, $watermark_size = 0, $watermark_url = null, $id_player_size = 0, $player_width = 640, $player_height = 480, $referers_id = 0, $countries_id = 0, $thumbnail_id = null, $splashscreen_id = null, $thumbnail_online = null, $hds = null, $hls = null) {
 
-
-    function __construct($id=0, $title='default title',
-            $description='default description', $custom_data=null,
-            $online=0, $stream_type=1, $acquisition=null, $http_url=null, 
-            $stream_category=20, $creationDate=null, $saveDate=null, $user_id=0,
-            $bandWidth=null, $activateChat=null, $autoplay=1,
-            $noframe_security=2,$enable_ads=0, $enable_subscription=0, 
-            $enable_payperview=0, $enable_coupon=0, $is_private=0,
-            $publish_on_dacast=1,$seo_index=1, $archive_filename=null,
-            $companion_position= "right",$theme_id=null, $watermark_position=0,
-            $watermark_size=0,$watermark_url=null, $id_player_size=0, 
-            $player_width=640,$player_height=480, $referers_id=0,
-            $countries_id=0, $thumbnail_id=null, $splashscreen_id=null, 
-            $thumbnail_online=null, $hds=null, $hls=null) {
-        
         $this->id = $id;
         $this->_title = $title;
         $this->_description = $description;
@@ -111,7 +97,6 @@ class Live {
         $this->hls = $hls;
     }
 
-    
     public function getLive_Id() {
         return $this->_live_id;
     }
@@ -423,7 +408,8 @@ class Live {
     public function setHls($hls) {
         $this->hls = $hls;
     }
-        public function getBackup_url() {
+
+    public function getBackup_url() {
         return $this->backup_url;
     }
 
@@ -431,4 +417,49 @@ class Live {
         $this->backup_url = $backup_url;
     }
 
+}
+
+function __toString() {
+
+    $string = "live_id : $_live_id <br>
+    title : $_title <br>
+    description : $_description <br>
+    custom_data : $_custom_data <br>
+    online : $_online <br>
+    stream_type : $_stream_type <br>
+    acquisition : $_acquisition <br>
+    http_url : $_http_url <br>
+    stream_category : $_stream_category <br>
+    creationDate : $_creationDate <br>
+    saveDate : $_saveDate <br>
+    user_id : $_user_id <br>
+    bandWidth : $_bandWidth <br>
+    activateChat : $_activateChat <br>
+    autoplay : $_autoplay <br>
+    noframe_security : $_noframe_security <br>
+    enable_ads : $_enable_ads <br>
+    enable_subscription : $_enable_subscription <br>
+    enable_payperview : $_enable_payperview <br>
+    enable_coupon : $_enable_coupon <br>
+    is_private : $_is_private <br>
+    publish_on_dacast : $_publish_on_dacast <br>
+    seo_index : $_seo_index <br>
+    archive_filename : $_archive_filename <br>
+    companion_position : $_companion_position <br>
+    theme_id : $_theme_id <br>
+    watermark_position : $_watermark_position <br>
+    watermark_size : $watermark_size <br>
+    watermark_url : $watermark_url <br>
+    id_player_size : $id_player_size <br>
+    player_width : $player_width <br>
+    player_height : $player_height <br>
+    referers_id : $referers_id <br>
+    countries_id : $countries_id <br>
+    thumbnail_id : $thumbnail_id <br>
+    splashscreen_id : $splashscreen_id <br>
+    thumbnail_online : $thumbnail_online <br>
+    hds : $hds <br>
+    hls : $hls <br>
+    backup_url : $backup_url <br>";
+    return $string;
 }
