@@ -1,20 +1,15 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of DAOLive
+ * This class is use to interact with the Live function API SELECT, CREATE, UPDATE, DELETE 
+ * get embed code of the Live function.
  *
  * @author Jonathan CHARDON
  */
 include_once ($pre . "Class/DAO/DAO.php");
 
 class DAOLive implements DAO {
-
+ 
     private $_APICall;
     private $_userSettings;
     private $_currentObjet;
@@ -117,7 +112,7 @@ class DAOLive implements DAO {
         }
     }
 
-    public function getAll() {
+    public function get_all() {
         $this->_fullUrlCall = self::API_URL . "/" .
                 "0?bid=" . $this->_userSettings->getBroadcasterID() .
                 "&apikey=" . $this->_userSettings->getApiKey();
@@ -133,7 +128,6 @@ class DAOLive implements DAO {
 
     private function convertDecodedJsonToArrayAllLive($Arraydecoded) {
         if (isset($Arraydecoded)) {
-            //var_dump($Arraydecoded);
             foreach ($Arraydecoded['live'] as $i => $decoded) {
                 $this->_allLive[$i] = new Live();
                 $this->_allLive[$i]->setLiveId($decoded["id"]);
@@ -282,7 +276,9 @@ class DAOLive implements DAO {
         unset($this->_allObject);
     }
 
-    public function get_allObject() {
+
+
+    public function getEmbedCode() {
         
     }
 

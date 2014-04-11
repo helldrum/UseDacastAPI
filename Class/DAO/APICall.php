@@ -1,14 +1,9 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
-
- * @auhor Jonathan CHARDON
+ * This class is use to make all the  API call, all the curl request are make here
+ *
+ * @author Jonathan CHARDON
  */
 class APICall {
 

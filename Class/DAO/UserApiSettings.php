@@ -1,15 +1,9 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of UserApiSettings
- *
- * @author User
+ * This Class is use to set the users Settings for the API call (APIKEY and Broadcaster ID)
+ * This is not a Singleton pattern in case of the user need to manage more than one account
+ * @author Jonathan CHARDON
  */
 class UserApiSettings {
 

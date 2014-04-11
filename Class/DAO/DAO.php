@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Interface use to structure the DAO 
+ * (all the DAO objet have the same name functions and expect the same result )
+ *
+ * @author Jonathan CHARDON
+ */
 interface DAO {  
     
     const API_URL = "https://www.dacast.com/backend/api/live";
@@ -7,8 +13,6 @@ interface DAO {
     public function create($object);
 
     public function update($object);
-
-    public function getALL();
 
     public function deleteById($id);
 
@@ -20,7 +24,7 @@ interface DAO {
 
     public function get_fullUrlCall();
 
-    public function get_allObject();
+    public function get_all();
 
     public function set_userSettings($_userSettings);
 
@@ -29,4 +33,6 @@ interface DAO {
     public function set_fullUrlCall($_fullUrlCall);
 
     public function reset_allObject();
+    
+    public function getEmbedCode();
 }
