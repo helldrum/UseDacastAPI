@@ -31,24 +31,30 @@ try {
 
     $live = new Live;
     $liveDao = new DAOLive($userSettings, $live);
-    
+
     //live doesn't exist
-    // echo $liveDao->deleteLiveById('12');
+     echo $liveDao->deleteById('12');
     ////live not numeric get a Fatal Error  live_id not numeric
-    //$liveDao->deleteLiveById('12EER');
+    //$liveDao->deleteById('12EER');
     //delete live 42971
     //  echo $liveDao->deleteLiveById('42971');
     // get live 42971
-    
     //exception live id is not numeric
     //echo $liveDao->getLiveById("ergjn");
-    
     //exception use getAllLiveInstead
     //echo $liveDao->getLiveById(0);
-    
     //get and display live 42971
-    $liveDao->getLiveById('42971');
-    var_dump($liveDao->getCurrentLive());
+    // $liveDao->getLiveById('42971');
+    // var_dump($liveDao->getCurrentLive());
+    // var_dump($liveDao->getAllLive());
+    //create new default live
+    //var_dump($liveDao->createNewLive($live));
+    //init new live 
+    //var_dump($customLive);
+
+    //$custom_live = new Live(42, 'live generate by the API plop', 'this is my live channel description', 'custom data i can put everything on it 34564758%*&*^)*9', '0');
+    //$result = $liveDao->createNewLive($custom_live);
+    //var_dump($result);
     
 } catch (Exception $e) {
     echo $e->getMessage();
