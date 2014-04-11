@@ -11,23 +11,23 @@
  *
  * @author Jonathan CHARDON
  */
-class DAOLive {
+include_once ($pre . "Class/DAO/DAO.php");
 
-    const API_URL = "https://www.dacast.com/backend/api/live";
+class DAOLive implements DAO {
 
     private $_APICall;
     private $_userSettings;
-    private $_Currentlive;
+    private $_currentObjet;
     private $_fullUrlCall;
-    private $_allLive = array();
+    private $_allObject;
 
     function __construct($userSettings, $live) {
         if (isset($live)) {
 
-            $this->_Currentlive = $live;
+            $this->_currentObjet = $live;
         } else {
 
-            $this->_Currentlive = new Live();
+            $this->_currentObjet = new Live();
         }
         if (isset($userSettings) && ($userSettings instanceof UserApiSettings)) {
             $this->_userSettings = $userSettings;
@@ -36,15 +36,15 @@ class DAOLive {
         }
     }
 
-    public function getUserSettings() {
+    public function get_UserSettings() {
         return $this->_userSettings;
     }
 
-    public function getCurrentLive() {
-        return $this->_Currentlive;
+    public function get_currentObjet() {
+        return $this->_currentObjet;
     }
 
-    public function getLiveById($live_id) {
+    public function getById($live_id) {
 
         if (is_numeric($live_id)) {
             if ($live_id != 0) {
@@ -59,7 +59,7 @@ class DAOLive {
                 $decoded = $this->_APICall->getJsonDecoded();
 
                 $this->convertDecodedJsonToLive($decoded);
-                return $this->_Currentlive;
+                return $this->_currentObjet;
             } else {
 
                 trigger_error("live_id = 0 use the function getAllLive instead.", E_USER_ERROR);
@@ -72,52 +72,52 @@ class DAOLive {
     private function convertDecodedJsonToLive($decoded) {
 
         if (isset($decoded)) {
-            $this->_Currentlive->setLiveId($decoded["live"]["id"]);
-            $this->_Currentlive->setTitle($decoded["live"]["title"]);
-            $this->_Currentlive->setDescription($decoded["live"]["description"]);
-            $this->_Currentlive->setCustom_data($decoded["live"]["custom_data"]);
-            $this->_Currentlive->setOnline($decoded["live"]["online"]);
-            $this->_Currentlive->setStream_type($decoded["live"]["stream_type"]);
-            $this->_Currentlive->setAcquisition($decoded["live"]["acquisition"]);
-            $this->_Currentlive->setHttp_url($decoded["live"]["http_url"]);
-            $this->_Currentlive->setStream_category($decoded["live"]["stream_category"]);
-            $this->_Currentlive->setCreationDate($decoded["live"]["creationDate"]);
-            $this->_Currentlive->setSaveDate($decoded["live"]["saveDate"]);
-            $this->_Currentlive->setUser_id($decoded["live"]["user_id"]);
-            $this->_Currentlive->setBandWidth($decoded["live"]["bandWidth"]);
-            $this->_Currentlive->setActivateChat($decoded["live"]["activateChat"]);
-            $this->_Currentlive->setAutoplay($decoded["live"]["autoplay"]);
-            $this->_Currentlive->setNoframe_security($decoded["live"]["noframe_security"]);
-            $this->_Currentlive->setEnable_ads($decoded["live"]["enable_ads"]);
-            $this->_Currentlive->setEnable_subscription($decoded["live"]["enable_subscription"]);
-            $this->_Currentlive->setEnable_payperview($decoded["live"]["enable_payperview"]);
-            $this->_Currentlive->setEnable_coupon($decoded["live"]["enable_coupon"]);
-            $this->_Currentlive->setIs_private($decoded["live"]["is_private"]);
-            $this->_Currentlive->setPublish_on_dacast($decoded["live"]["publish_on_dacast"]);
-            $this->_Currentlive->setSeo_index($decoded["live"]["seo_index"]);
-            $this->_Currentlive->setArchive_filename($decoded["live"]["archive_filename"]);
-            $this->_Currentlive->setCompanion_position($decoded["live"]["companion_position"]);
-            $this->_Currentlive->setTheme_id($decoded["live"]["theme_id"]);
-            $this->_Currentlive->setWatermark_position($decoded["live"]["watermark_position"]);
-            $this->_Currentlive->setWatermark_size($decoded["live"]["watermark_size"]);
-            $this->_Currentlive->setWatermark_url($decoded["live"]["watermark_url"]);
-            $this->_Currentlive->setId_player_size($decoded["live"]["id_player_size"]);
-            $this->_Currentlive->setPlayer_width($decoded["live"]["player_width"]);
-            $this->_Currentlive->setPlayer_height($decoded["live"]["player_height"]);
-            $this->_Currentlive->setReferers_id($decoded["live"]["referers_id"]);
-            $this->_Currentlive->setCountries_id($decoded["live"]["countries_id"]);
-            $this->_Currentlive->setThumbnail_id($decoded["live"]["thumbnail_id"]);
-            $this->_Currentlive->setSplashscreen_id($decoded["live"]["splashscreen_id"]);
-            $this->_Currentlive->setThumbnail_online($decoded["live"]["thumbnail_online"]);
-            $this->_Currentlive->setHds($decoded["live"]["hds"]);
-            $this->_Currentlive->setHls($decoded["live"]["hls"]);
+            $this->_currentObjet->setLiveId($decoded["live"]["id"]);
+            $this->_currentObjet->setTitle($decoded["live"]["title"]);
+            $this->_currentObjet->setDescription($decoded["live"]["description"]);
+            $this->_currentObjet->setCustom_data($decoded["live"]["custom_data"]);
+            $this->_currentObjet->setOnline($decoded["live"]["online"]);
+            $this->_currentObjet->setStream_type($decoded["live"]["stream_type"]);
+            $this->_currentObjet->setAcquisition($decoded["live"]["acquisition"]);
+            $this->_currentObjet->setHttp_url($decoded["live"]["http_url"]);
+            $this->_currentObjet->setStream_category($decoded["live"]["stream_category"]);
+            $this->_currentObjet->setCreationDate($decoded["live"]["creationDate"]);
+            $this->_currentObjet->setSaveDate($decoded["live"]["saveDate"]);
+            $this->_currentObjet->setUser_id($decoded["live"]["user_id"]);
+            $this->_currentObjet->setBandWidth($decoded["live"]["bandWidth"]);
+            $this->_currentObjet->setActivateChat($decoded["live"]["activateChat"]);
+            $this->_currentObjet->setAutoplay($decoded["live"]["autoplay"]);
+            $this->_currentObjet->setNoframe_security($decoded["live"]["noframe_security"]);
+            $this->_currentObjet->setEnable_ads($decoded["live"]["enable_ads"]);
+            $this->_currentObjet->setEnable_subscription($decoded["live"]["enable_subscription"]);
+            $this->_currentObjet->setEnable_payperview($decoded["live"]["enable_payperview"]);
+            $this->_currentObjet->setEnable_coupon($decoded["live"]["enable_coupon"]);
+            $this->_currentObjet->setIs_private($decoded["live"]["is_private"]);
+            $this->_currentObjet->setPublish_on_dacast($decoded["live"]["publish_on_dacast"]);
+            $this->_currentObjet->setSeo_index($decoded["live"]["seo_index"]);
+            $this->_currentObjet->setArchive_filename($decoded["live"]["archive_filename"]);
+            $this->_currentObjet->setCompanion_position($decoded["live"]["companion_position"]);
+            $this->_currentObjet->setTheme_id($decoded["live"]["theme_id"]);
+            $this->_currentObjet->setWatermark_position($decoded["live"]["watermark_position"]);
+            $this->_currentObjet->setWatermark_size($decoded["live"]["watermark_size"]);
+            $this->_currentObjet->setWatermark_url($decoded["live"]["watermark_url"]);
+            $this->_currentObjet->setId_player_size($decoded["live"]["id_player_size"]);
+            $this->_currentObjet->setPlayer_width($decoded["live"]["player_width"]);
+            $this->_currentObjet->setPlayer_height($decoded["live"]["player_height"]);
+            $this->_currentObjet->setReferers_id($decoded["live"]["referers_id"]);
+            $this->_currentObjet->setCountries_id($decoded["live"]["countries_id"]);
+            $this->_currentObjet->setThumbnail_id($decoded["live"]["thumbnail_id"]);
+            $this->_currentObjet->setSplashscreen_id($decoded["live"]["splashscreen_id"]);
+            $this->_currentObjet->setThumbnail_online($decoded["live"]["thumbnail_online"]);
+            $this->_currentObjet->setHds($decoded["live"]["hds"]);
+            $this->_currentObjet->setHls($decoded["live"]["hls"]);
         } else {
             $message = "Error :  no way to decode Live json.";
             return $message;
         }
     }
 
-    public function getAllLive() {
+    public function getAll() {
         $this->_fullUrlCall = self::API_URL . "/" .
                 "0?bid=" . $this->_userSettings->getBroadcasterID() .
                 "&apikey=" . $this->_userSettings->getApiKey();
@@ -128,7 +128,7 @@ class DAOLive {
 
         $this->convertDecodedJsonToArrayAllLive($decoded);
 
-        return $this->_allLive;
+        return $this->_allObject;
     }
 
     private function convertDecodedJsonToArrayAllLive($Arraydecoded) {
@@ -182,27 +182,27 @@ class DAOLive {
         }
     }
 
-    public function getFullUrlCall() {
+    public function get_fullUrlCall() {
         return $this->_fullUrlCall;
     }
 
-    public function setUserSettings($userSettings) {
+    public function set_userSettings($userSettings) {
         $this->_userSettings = $userSettings;
     }
 
-    public function setCurrentLive($live) {
+    public function set_currentObjet($live) {
         if ($live instanceof Live) {
-            $this->_Currentlive = $live;
+            $this->_currentObjet = $live;
         } else {
             trigger_error("objet is not instance of Live.", E_USER_ERROR);
         }
     }
 
-    public function setFullUrlCall($fullUrlCall) {
+    public function set_fullUrlCall($fullUrlCall) {
         $this->_fullUrlCall = $fullUrlCall;
     }
 
-    public function deleteLiveById($live_id) {
+    public function deleteById($live_id) {
 
         if (is_numeric($live_id)) {
             $this->_fullUrlCall = self::API_URL . "/" . $live_id .
@@ -227,7 +227,7 @@ class DAOLive {
         }
     }
 
-    public function createNewLive($live) {
+    public function create($live) {
 
         if ($live instanceof Live) {
 
@@ -248,7 +248,7 @@ class DAOLive {
             }
 
 
-            return $this->_Currentlive;
+            return $this->_currentObjet;
         } else {
             trigger_error("live parameter is not a live object.", E_USER_ERROR);
         }
@@ -272,6 +272,18 @@ class DAOLive {
                 "&player_height=" . urlencode($live->getPlayer_height()) .
                 "&countries_id=" . urlencode($live->getCountries_id()) .
                 "&referers_id=" . urlencode($live->getReferers_id());
+    }
+
+    public function update($live) {
+        
+    }
+
+    public function reset_allObject() {
+        unset($this->_allObject);
+    }
+
+    public function get_allObject() {
+        
     }
 
 }
