@@ -9,7 +9,7 @@
 include_once ($pre . "Class/DAO/DAO.php");
 
 class DAOLive implements DAO {
- 
+
     private $_APICall;
     private $_userSettings;
     private $_currentObjet;
@@ -227,7 +227,7 @@ class DAOLive implements DAO {
 
             $this->setCreateLiveURL(0, $live);
 
-            echo $this->_fullUrlCall;
+
 
             $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
             $this->_APICall->ApiRequest("POST", $this->_fullUrlCall);
@@ -276,10 +276,29 @@ class DAOLive implements DAO {
         unset($this->_allObject);
     }
 
+    public function getEmbedCode($live_id, $type) {
+        if ($type == 'js' || $type == 'frame') {
+            if (is_numeric($live_id)) {
+                $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                        "/embed/" . $type . "?bid=" . $this->_userSettings->getBroadcasterID() .
+                        "&apikey=" . $this->_userSettings->getApiKey();
 
+                $this->_APICall->ApiRequestWithRawData($this->_fullUrlCall);
 
-    public function getEmbedCode() {
-        
+                $decoded = $this->_APICall->getJsonDecoded();
+
+                if (isset($decoded['error']['message'])) {
+                    $message = "Error :  " . $decoded['error']['message'];
+                    return $message;
+                }
+                return $decoded;
+            } else {
+
+                trigger_error("live_id is not numeric.", E_USER_ERROR);
+            }
+        } else {
+            trigger_error("Unknown type of embed code.", E_USER_ERROR);
+        }
     }
 
 }

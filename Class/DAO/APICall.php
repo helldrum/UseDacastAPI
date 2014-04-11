@@ -87,15 +87,31 @@ class APICall {
             curl_setopt($ch, CURLOPT_USERAGENT, "MozillaXYZ/1.0");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            
+
             $output = curl_exec($ch);
             curl_close($ch);
-            
+
             $this->_jsonDecoded = json_decode($output, true);
-            
         } catch (Exception $e) {
             trigger_error($e->getMessage(), E_USER_ERROR);
         }
+    }
+
+    function ApiRequestWithRawData($url) {
+        //use to make API call for the Raw return (like embed code)
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
+        curl_setopt($ch, CURLOPT_USERAGENT, "MozillaXYZ/1.0");
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+
+        $output = curl_exec($ch);
+   
+        $this->_jsonDecoded = $output;
+        curl_close($ch);
     }
 
 }

@@ -34,5 +34,5 @@ interface DAO {
 
     public function reset_allObject();
     
-    public function getEmbedCode();
+    public function getEmbedCode($id, $type);
 }
