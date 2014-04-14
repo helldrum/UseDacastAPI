@@ -6,7 +6,7 @@
  *
  * @author Jonathan CHARDON
  */
-include_once ($pre . "Class/DAO/DAO.php");
+include_once ($pre . "Autoload.php");
 
 class DAOLive implements DAO {
 
