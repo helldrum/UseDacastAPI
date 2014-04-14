@@ -10,11 +10,7 @@ if ($prod == 1) {
     $pre = './';
 }
 
-include_once ($pre . "Class/DAO/APICall.php");
-include_once ($pre . "Class/DAO/DAOLive.php");
-include_once ($pre . "Class/DAO/UserApiSettings.php");
-include_once ($pre . "Class/Live.php");
-
+include ($pre . "Autoload.php");
 
 define('BID', '26708');
 define('API_KEY', '7c70028b237d85cda0cc');
