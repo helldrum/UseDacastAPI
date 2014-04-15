@@ -16,7 +16,7 @@ class DAOLive implements DAO {
     private $_currentObjet;
     private $_currentRate;
     private $_fullUrlCall;
-    private $_allObject;
+    private $_tabAllLive;
     private $_logError;
 
     function __construct($userSettings, $live) {
@@ -58,8 +58,12 @@ class DAOLive implements DAO {
 
                 $decoded = $this->_APICall->getJsonDecoded();
 
-                $this->convertDecodedJsonToLive($decoded);
-                return $this->_currentObjet;
+                $message = $this->convertDecodedJsonToLive($decoded);
+                if (isset($message)) {
+                    return $message;
+                } else {
+                    return $this->_currentObjet;
+                }
             } else {
 
                 trigger_error("live_id = 0 use the function getAllLive instead.", E_USER_ERROR);
@@ -129,55 +133,71 @@ class DAOLive implements DAO {
 
         $decoded = $this->_APICall->getJsonDecoded();
 
-        $this->convertDecodedJsonToArrayAllLive($decoded);
+        $error = $this->convertDecodedJsonToArrayAllLive($decoded);
+        
+        if (isset($error)) {
+            return $error;
+        }
 
-        return $this->_allObject;
+        if (isset($decoded['error']['message'])) {
+            $message = "Error :  " . $decoded['error']['message'];
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
+            return $message;
+        }
+        return $this->_tabAllLive;
     }
 
     private function convertDecodedJsonToArrayAllLive($Arraydecoded) {
+        $buffLive = new Live();
+        $tabBuffLive;
         if (isset($Arraydecoded)) {
             foreach ($Arraydecoded['live'] as $i => $decoded) {
-                $this->_allLive[$i] = new Live();
-                $this->_allLive[$i]->setLiveId($decoded["id"]);
-                $this->_allLive[$i]->setTitle($decoded["title"]);
-                $this->_allLive[$i]->setDescription($decoded["description"]);
-                $this->_allLive[$i]->setCustom_data($decoded["custom_data"]);
-                $this->_allLive[$i]->setOnline($decoded["online"]);
-                $this->_allLive[$i]->setStream_type($decoded["stream_type"]);
-                $this->_allLive[$i]->setAcquisition($decoded["acquisition"]);
-                $this->_allLive[$i]->setHttp_url($decoded["http_url"]);
-                $this->_allLive[$i]->setStream_category($decoded["stream_category"]);
-                $this->_allLive[$i]->setCreationDate($decoded["creationDate"]);
-                $this->_allLive[$i]->setSaveDate($decoded["saveDate"]);
-                $this->_allLive[$i]->setUser_id($decoded["user_id"]);
-                $this->_allLive[$i]->setBandWidth($decoded["bandWidth"]);
-                $this->_allLive[$i]->setActivateChat($decoded["activateChat"]);
-                $this->_allLive[$i]->setAutoplay($decoded["autoplay"]);
-                $this->_allLive[$i]->setNoframe_security($decoded["noframe_security"]);
-                $this->_allLive[$i]->setEnable_ads($decoded["enable_ads"]);
-                $this->_allLive[$i]->setEnable_subscription($decoded["enable_subscription"]);
-                $this->_allLive[$i]->setEnable_payperview($decoded["enable_payperview"]);
-                $this->_allLive[$i]->setEnable_coupon($decoded["enable_coupon"]);
-                $this->_allLive[$i]->setIs_private($decoded["is_private"]);
-                $this->_allLive[$i]->setPublish_on_dacast($decoded["publish_on_dacast"]);
-                $this->_allLive[$i]->setSeo_index($decoded["seo_index"]);
-                $this->_allLive[$i]->setArchive_filename($decoded["archive_filename"]);
-                $this->_allLive[$i]->setCompanion_position($decoded["companion_position"]);
-                $this->_allLive[$i]->setTheme_id($decoded["theme_id"]);
-                $this->_allLive[$i]->setWatermark_position($decoded["watermark_position"]);
-                $this->_allLive[$i]->setWatermark_size($decoded["watermark_size"]);
-                $this->_allLive[$i]->setWatermark_url($decoded["watermark_url"]);
-                $this->_allLive[$i]->setId_player_size($decoded["id_player_size"]);
-                $this->_allLive[$i]->setPlayer_width($decoded["player_width"]);
-                $this->_allLive[$i]->setPlayer_height($decoded["player_height"]);
-                $this->_allLive[$i]->setReferers_id($decoded["referers_id"]);
-                $this->_allLive[$i]->setCountries_id($decoded["countries_id"]);
-                $this->_allLive[$i]->setThumbnail_id($decoded["thumbnail_id"]);
-                $this->_allLive[$i]->setSplashscreen_id($decoded["splashscreen_id"]);
-                $this->_allLive[$i]->setThumbnail_online($decoded["thumbnail_online"]);
-                $this->_allLive[$i]->setHds($decoded["hds"]);
-                $this->_allLive[$i]->setHls($decoded["hls"]);
+
+                $buffLive->setLiveId($decoded["id"]);
+                $buffLive->setTitle($decoded["title"]);
+                $buffLive->setDescription($decoded["description"]);
+                $buffLive->setCustom_data($decoded["custom_data"]);
+                $buffLive->setOnline($decoded["online"]);
+                $buffLive->setStream_type($decoded["stream_type"]);
+                $buffLive->setAcquisition($decoded["acquisition"]);
+                $buffLive->setHttp_url($decoded["http_url"]);
+                $buffLive->setStream_category($decoded["stream_category"]);
+                $buffLive->setCreationDate($decoded["creationDate"]);
+                $buffLive->setSaveDate($decoded["saveDate"]);
+                $buffLive->setUser_id($decoded["user_id"]);
+                $buffLive->setBandWidth($decoded["bandWidth"]);
+                $buffLive->setActivateChat($decoded["activateChat"]);
+                $buffLive->setAutoplay($decoded["autoplay"]);
+                $buffLive->setNoframe_security($decoded["noframe_security"]);
+                $buffLive->setEnable_ads($decoded["enable_ads"]);
+                $buffLive->setEnable_subscription($decoded["enable_subscription"]);
+                $buffLive->setEnable_payperview($decoded["enable_payperview"]);
+                $buffLive->setEnable_coupon($decoded["enable_coupon"]);
+                $buffLive->setIs_private($decoded["is_private"]);
+                $buffLive->setPublish_on_dacast($decoded["publish_on_dacast"]);
+                $buffLive->setSeo_index($decoded["seo_index"]);
+                $buffLive->setArchive_filename($decoded["archive_filename"]);
+                $buffLive->setCompanion_position($decoded["companion_position"]);
+                $buffLive->setTheme_id($decoded["theme_id"]);
+                $buffLive->setWatermark_position($decoded["watermark_position"]);
+                $buffLive->setWatermark_size($decoded["watermark_size"]);
+                $buffLive->setWatermark_url($decoded["watermark_url"]);
+                $buffLive->setId_player_size($decoded["id_player_size"]);
+                $buffLive->setPlayer_width($decoded["player_width"]);
+                $buffLive->setPlayer_height($decoded["player_height"]);
+                $buffLive->setReferers_id($decoded["referers_id"]);
+                $buffLive->setCountries_id($decoded["countries_id"]);
+                $buffLive->setThumbnail_id($decoded["thumbnail_id"]);
+                $buffLive->setSplashscreen_id($decoded["splashscreen_id"]);
+                $buffLive->setThumbnail_online($decoded["thumbnail_online"]);
+                $buffLive->setHds($decoded["hds"]);
+                $buffLive->setHls($decoded["hls"]);
+
+                $tabBuffLive[$i] = $buffLive;
             }
+            $this->reset_tabAllLive();
+            $this->_tabAllLive= $tabBuffLive;
+
         } else {
             $message = "Error :  no way to decode all Live json.";
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  no way to decode All Live json." . print_r($decoded["live"], true) . " " . $e->getMessage());
@@ -193,8 +213,8 @@ class DAOLive implements DAO {
         $this->_userSettings = $userSettings;
     }
 
-    public function reset_allObject() {
-        unset($this->_allObject);
+    public function reset_tabAllLive() {
+        unset($this->_tabAllLive);
     }
 
     public function set_currentObjet($live) {
@@ -520,6 +540,7 @@ class DAOLive implements DAO {
                 $buffRate->set_start_method($decoded["rate"]["start_method"]);
                 $TabBufferAllRate[$i] = $buffRate;
             }
+            $this->_currentObjet->reset_AllRate();
             $this->_currentObjet->set_TabAllRate($TabBufferAllRate);
         } else {
 

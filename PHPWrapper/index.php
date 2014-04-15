@@ -54,14 +54,16 @@ try {
     //TODO not finish due to currency bug
     //$rate= new Rate(0, "payperview", 1.00, "USD", 2, "min");
     //$liveDao->createRateById(12066, $rate);
-
-    
     //get rate 12074 of channel 33482
-   // $liveDao->getRatebyId(33482, 12074);
-   // $rate12074Live33482 = $liveDao->get_currentObjet()->get_currentRate();
+    // $liveDao->getRatebyId(33482, 12074);
+    // $rate12074Live33482 = $liveDao->get_currentObjet()->get_currentRate();
     //var_dump($rate12074Live33482);
+
+    $tabAllLive = $liveDao->get_all();
     
-    
+    foreach ($tabAllLive as $live ){
+        echo $live;
+    }
 } catch (Exception $e) {
     echo $e->getMessage();
 }

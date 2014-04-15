@@ -30,8 +30,6 @@ interface DAO {
 
     public function set_fullUrlCall($_fullUrlCall);
 
-    public function reset_allObject();
-
     public function getEmbedCode($id, $type);
 
     public function getRatebyId($live_id, $rate_id);
