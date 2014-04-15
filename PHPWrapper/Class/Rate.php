@@ -148,10 +148,29 @@ class Rate {
     public function set_multiply_by_quantity($_multiply_by_quantity) {
         $this->_multiply_by_quantity = $_multiply_by_quantity;
     }
-    
+
     public function set_start_method($_start_method) {
         $this->_start_method = $_start_method;
     }
 
+    public function __toString() {
+
+        $toString = "rate_id $this->_id<br>
+    type = $this->_type<br>
+    recurrence = $this->_recurrence<br>
+    price = $this->_price<br>
+    beginDate = $this->_beginDate<br>
+    endDate = $this->_endDate<br>
+    currency = $this->_currency<br>
+    active = $this->_active<br>
+    channel_id = $this->_channel_id<br>
+    channels_package_id = $this->_channels_package_id<br>
+    time_quantity = $this->_time_quantity<br>
+    time_unit = $this->_time_unit<br>
+    multiply_by_quantity = $this->_multiply_by_quantity<br>
+    start_time = $this->_start_time<br>
+    start_method = $this->_start_method<br>";
+        return $toString;
+    }
 
 }

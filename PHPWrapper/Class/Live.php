@@ -54,7 +54,7 @@ class Live {
     private $_hds;
     private $_hls;
     private $_backup_url;
-    private $_TabAllRate;
+    private $_tabAllRate;
     private $_currentRate;
 
     function __construct($id = 0, $title = 'default title', $description = 'default description', $custom_data = null, $online = 0, $stream_type = 1, $acquisition = null, $http_url = null, $stream_category = 20, $creationDate = null, $saveDate = null, $user_id = 0, $bandWidth = null, $activateChat = null, $autoplay = 1, $noframe_security = 2, $enable_ads = 0, $enable_subscription = 0, $enable_payperview = 0, $enable_coupon = 0, $is_private = 0, $publish_on_dacast = 1, $external_video_page = '', $seo_index = 1, $archive_filename = null, $companion_position = "right", $theme_id = null, $watermark_position = 0, $watermark_size = 0, $watermark_url = null, $id_player_size = 0, $player_width = 640, $player_height = 480, $referers_id = 0, $countries_id = 0, $thumbnail_id = null, $splashscreen_id = null, $thumbnail_online = null, $hds = null, $hls = null, $backup_url = '') {
@@ -431,7 +431,7 @@ class Live {
     }
 
     public function get_TabAllRate() {
-        return $this->_TabAllRate;
+        return $this->_tabAllRate;
     }
 
     public function get_currentRate() {
@@ -439,19 +439,60 @@ class Live {
     }
 
     public function set_TabAllRate($_TabAllRate) {
-           //TODO not Implemented yet
-        $this->_TabAllRate = $_TabAllRate;
+//TODO not Implemented yet
+        $this->_tabAllRate = $_TabAllRate;
         throw new Exception('Not implemented');
-    
     }
 
-    public function set_currentRate($currentRate) {
-        if ($currentRate instanceof Rate) {
-            $this->_currentRate = $currentRate;
-        } else {
-            trigger_error("parameter currentRate is not a instance of Rate.", E_USER_ERROR);
-        }
-  
+    public function reset_ALLRate() {
+
+        unset($this->_tabAllRate);
+    }
+
+    public function __toString() {
+
+        $toString = "live_id = $this->_live_id <br>
+    title = $this->_title <br> 
+    description = $this->_description <br>
+    custom_data = $this->_custom_data <br>
+    online = $this->_online <br>
+    stream_type = $this->_stream_type <br>
+    acquisition = $this->_acquisition <br>
+    http_url = $this->_http_url <br>
+    stream_category = $this->_stream_category <br>
+    creationDate = $this->_creationDate <br>
+    saveDate = $this->_saveDate <br>
+    user_id = $this->_user_id <br>
+    bandWidth = $this->_bandWidth <br>
+    activateChat = $this->_activateChat <br>
+    autoplay = $this->_autoplay <br>
+    noframe_security = $this->_noframe_security <br>
+    enable_ads  = $this->_enable_ads <br>
+    enable_subscription = $this->_enable_subscription <br>
+    enable_payperview = $this->_enable_payperview <br>
+    enable_coupon = $this->_enable_coupon <br>
+    is_private = $this->_is_private <br>
+    publish_on_dacast = $this->_publish_on_dacast <br>
+    external_video_page  = $this->_external_video_page <br>
+    seo_index = $this->_seo_index <br>
+    archive_filename = $this->_archive_filename <br>
+    companion_position = $this->_companion_position <br>
+    theme_id = $this->_theme_id <br>
+    watermark_position =  $this->_watermark_position <br>
+    watermark_size = $this->_watermark_size <br>
+    watermark_url = $this->_watermark_url <br>
+    id_player_size = $this->_id_player_size <br>
+    player_width = $this->_player_width <br>
+    player_height = $this->_player_height <br>
+    referers_id = $this->_referers_id <br>
+    countries_id = $this->_countries_id <br>
+    thumbnail_id = $this->_thumbnail_id <br>
+    splashscreen_id = $this->_splashscreen_id <br>
+    thumbnail_online = $this->_thumbnail_online <br>
+    hds  =$this->_hds <br>
+    hls = $this->_hls <br>
+    backup_url = $this->_backup_url <br>";
+        return $toString;
     }
 
 }
