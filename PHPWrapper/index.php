@@ -10,11 +10,8 @@ $pre = '';
 if ($prod == 1) {
     $pre = './';
 }
-include_once ($pre . "Class/DAO/APICall.php");
-include_once ($pre . "Class/DAO/DAOLive.php");
-include_once ($pre . "Class/DAO/UserApiSettings.php");
-include_once ($pre . "Class/Live.php");
 
+include_once ($pre . "globalfunction.php");
 
 //you need to set here your own APIKEy and BID
 define('BID', '26708');
@@ -33,7 +30,7 @@ try {
     $liveDao = new DAOLive($userSettings, $live);
 
     //live doesn't exist
-     echo $liveDao->deleteById('12');
+    //echo $liveDao->deleteById('12');
     ////live not numeric get a Fatal Error  live_id not numeric
     //$liveDao->deleteById('12EER');
     //delete live 42971
@@ -51,10 +48,19 @@ try {
     //var_dump($liveDao->createNewLive($live));
     //init new live 
     //var_dump($customLive);
-
     //$custom_live = new Live(42, 'live generate by the API plop', 'this is my live channel description', 'custom data i can put everything on it 34564758%*&*^)*9', '0');
     //$result = $liveDao->createNewLive($custom_live);
     //var_dump($result);
+    //TODO not finish due to currency bug
+    //$rate= new Rate(0, "payperview", 1.00, "USD", 2, "min");
+    //$liveDao->createRateById(12066, $rate);
+
+    
+    //get rate 12074 of channel 33482
+   // $liveDao->getRatebyId(33482, 12074);
+   // $rate12074Live33482 = $liveDao->get_currentObjet()->get_currentRate();
+    //var_dump($rate12074Live33482);
+    
     
 } catch (Exception $e) {
     echo $e->getMessage();
