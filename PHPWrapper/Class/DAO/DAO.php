@@ -6,8 +6,8 @@
  *
  * @author Jonathan CHARDON
  */
-interface DAO {  
-    
+interface DAO {
+
     const API_URL = "https://www.dacast.com/backend/api/live";
 
     public function create($object);
@@ -31,6 +31,14 @@ interface DAO {
     public function set_fullUrlCall($_fullUrlCall);
 
     public function reset_allObject();
-    
+
     public function getEmbedCode($id, $type);
+
+    public function getRatebyId($live_id, $rate_id);
+
+    public function getAllRatebyId($live_id);
+
+    public function createRateById($live_id, $rate);
+
+    public function deleteRatebyId($live_id, $rate_id);
 }

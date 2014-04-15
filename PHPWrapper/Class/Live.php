@@ -54,8 +54,10 @@ class Live {
     private $_hds;
     private $_hls;
     private $_backup_url;
+    private $_TabAllRate;
+    private $_currentRate;
 
-    function __construct($id = 0, $title = 'default title', $description = 'default description', $custom_data = null, $online = 0, $stream_type = 1, $acquisition = null, $http_url = null, $stream_category = 20, $creationDate = null, $saveDate = null, $user_id = 0, $bandWidth = null, $activateChat = null, $autoplay = 1, $noframe_security = 2, $enable_ads = 0, $enable_subscription = 0, $enable_payperview = 0, $enable_coupon = 0, $is_private = 0, $publish_on_dacast = 1,$external_video_page= '', $seo_index = 1, $archive_filename = null, $companion_position = "right", $theme_id = null, $watermark_position = 0, $watermark_size = 0, $watermark_url = null, $id_player_size = 0, $player_width = 640, $player_height = 480, $referers_id = 0, $countries_id = 0, $thumbnail_id = null, $splashscreen_id = null, $thumbnail_online = null, $hds = null, $hls = null ,$backup_url='') {
+    function __construct($id = 0, $title = 'default title', $description = 'default description', $custom_data = null, $online = 0, $stream_type = 1, $acquisition = null, $http_url = null, $stream_category = 20, $creationDate = null, $saveDate = null, $user_id = 0, $bandWidth = null, $activateChat = null, $autoplay = 1, $noframe_security = 2, $enable_ads = 0, $enable_subscription = 0, $enable_payperview = 0, $enable_coupon = 0, $is_private = 0, $publish_on_dacast = 1, $external_video_page = '', $seo_index = 1, $archive_filename = null, $companion_position = "right", $theme_id = null, $watermark_position = 0, $watermark_size = 0, $watermark_url = null, $id_player_size = 0, $player_width = 640, $player_height = 480, $referers_id = 0, $countries_id = 0, $thumbnail_id = null, $splashscreen_id = null, $thumbnail_online = null, $hds = null, $hls = null, $backup_url = '') {
 
         $this->id = $id;
         $this->_title = $title;
@@ -97,7 +99,7 @@ class Live {
         $this->_thumbnail_online = $thumbnail_online;
         $this->_hds = $hds;
         $this->_hls = $hls;
-        $this->_backup_url=$backup_url;
+        $this->_backup_url = $backup_url;
     }
 
     public function getLive_Id() {
@@ -187,6 +189,7 @@ class Live {
     public function getPublish_on_dacast() {
         return $this->_publish_on_dacast;
     }
+
     public function getExternal_video_page() {
         return $this->external_video_page;
     }
@@ -195,7 +198,7 @@ class Live {
         $this->external_video_page = $external_video_page;
     }
 
-        public function getSeo_index() {
+    public function getSeo_index() {
         return $this->_seo_index;
     }
 
@@ -425,6 +428,30 @@ class Live {
 
     public function setBackup_url($backup_url) {
         $this->_backup_url = $backup_url;
+    }
+
+    public function get_TabAllRate() {
+        return $this->_TabAllRate;
+    }
+
+    public function get_currentRate() {
+        return $this->_currentRate;
+    }
+
+    public function set_TabAllRate($_TabAllRate) {
+           //TODO not Implemented yet
+        $this->_TabAllRate = $_TabAllRate;
+        throw new Exception('Not implemented');
+    
+    }
+
+    public function set_currentRate($currentRate) {
+        if ($currentRate instanceof Rate) {
+            $this->_currentRate = $currentRate;
+        } else {
+            trigger_error("parameter currentRate is not a instance of Rate.", E_USER_ERROR);
+        }
+  
     }
 
 }

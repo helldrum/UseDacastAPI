@@ -14,6 +14,7 @@ class DAOLive implements DAO {
     private $_APICall;
     private $_userSettings;
     private $_currentObjet;
+    private $_currentRate;
     private $_fullUrlCall;
     private $_allObject;
     private $_logError;
@@ -192,6 +193,10 @@ class DAOLive implements DAO {
         $this->_userSettings = $userSettings;
     }
 
+    public function reset_allObject() {
+        unset($this->_allObject);
+    }
+
     public function set_currentObjet($live) {
         if ($live instanceof Live) {
             $this->_currentObjet = $live;
@@ -237,8 +242,6 @@ class DAOLive implements DAO {
 
             $this->setCreateLiveURL(0, $live);
 
-
-
             $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
             $this->_APICall->ApiRequest("POST", $this->_fullUrlCall);
 
@@ -265,6 +268,7 @@ class DAOLive implements DAO {
                 "?bid=" . $this->_userSettings->getBroadcasterID() .
                 "&apikey=" . $this->_userSettings->getApiKey() .
                 "&title=" . urlencode($live->getTitle());
+
         if (($live->getDescription()) != null) {
             $this->_fullUrlCall = $this->_fullUrlCall . "&description=" . urlencode($live->getDescription());
         }
@@ -306,10 +310,6 @@ class DAOLive implements DAO {
         }
     }
 
-    public function reset_allObject() {
-        unset($this->_allObject);
-    }
-
     public function getEmbedCode($live_id, $type) {
         if ($type == 'js' || $type == 'frame') {
             if (is_numeric($live_id)) {
@@ -335,6 +335,201 @@ class DAOLive implements DAO {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "Unknown type of embed code." . $type);
             trigger_error("Unknown type of embed code.", E_USER_ERROR);
         }
+    }
+
+    public function createRateById($live_id, $rate) {
+        throw new Exception('Not finish due to currency issues');
+
+        if (is_numeric($live_id)) {
+            if ($live_id != 0) {
+                if ($rate instanceof Rate) {
+                    $this->setURLcreateRate($live_id, $rate);
+                    $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+                    $this->_APICall->ApiRequest("POST", $this->_fullUrlCall);
+
+                    $decoded = $this->_APICall->getJsonDecoded();
+                    $this->convertDecodedJsonToRate($decoded);
+
+                    if (isset($decoded['error']['message'])) {
+                        $message = "Error :  " . $decoded['error']['message'];
+                        $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
+                        return $message;
+                    }
+
+
+                    return $this->_currentObjet;
+                } else {
+                    trigger_error("Parameter rate is not a instance of Rate.", E_USER_ERROR);
+                }
+            } else {
+                trigger_error("Parameter live_id can be set to 0.", E_USER_ERROR);
+            }
+        }
+        trigger_error("Parameter live_id is not numeric.", E_USER_ERROR);
+    }
+
+    private function setURLcreateRate($live_id, $rate) {
+        $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                "/rate/0?bid=" . $this->_userSettings->getBroadcasterID() .
+                "&apikey=" . $this->_userSettings->getApiKey();
+
+
+        if (($rate->get_type()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&type=" . urlencode($rate->get_type());
+        }
+
+        if (($rate->get_price()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&price=" . urlencode($rate->get_price());
+        }
+
+        if (($rate->get_currency()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "¤cy=" . urlencode($rate->get_currency());
+        }
+
+        if (($rate->get_time_quantity()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&time_quantity=" . urlencode($rate->get_time_quantity());
+        }
+        if (($rate->get_time_unit()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&time_unit=" . urlencode($rate->get_time_unit());
+        }
+        if (($rate->get_multiply_by_quantity()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&multiply_by_quantity=" . urlencode($rate->get_multiply_by_quantity());
+        }
+        if (($rate->get_start_time()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&start_time=" . urlencode($rate->get_start_time());
+        }
+    }
+
+    public function getRatebyId($live_id, $rate_id) {
+
+        if (is_numeric($live_id)) {
+            if ($live_id != 0) {
+                if (is_numeric($rate_id)) {
+                    if ($rate_id != 0) {
+
+                        $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                                "/rate/" . $rate_id .
+                                "?bid=" . $this->_userSettings->getBroadcasterID() .
+                                "&apikey=" . $this->_userSettings->getApiKey();
+
+                        $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+                        $this->_APICall->ApiRequest("GET", $this->_fullUrlCall);
+
+                        $decoded = $this->_APICall->getJsonDecoded();
+
+                        $this->convertDecodedJsonToRate($decoded);
+                        if (isset($decoded['error']['message'])) {
+                            $message = "Error :  " . $decoded['error']['message'];
+                            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
+                            return $message;
+                        }
+
+                        return $this->_currentRate;
+                    } else {
+                        $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id = 0 use the function getAllRate instead.");
+                        trigger_error("rate_id = 0 use the function getAllRate instead.", E_USER_ERROR);
+                    }
+                } else {
+                    $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id is not numeric.");
+                    trigger_error("rate_id is not numeric.", E_USER_ERROR);
+                }
+            } else {
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id = 0 use the function getAllLive instead.");
+                trigger_error("live_id = 0 use the function getAllLive instead.", E_USER_ERROR);
+            }
+        } else {
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id);
+            trigger_error("live_id is not numeric.", E_USER_ERROR);
+        }
+    }
+
+    private function convertDecodedJsonToRate($decoded) {
+        $buffRate = new Rate();
+        if (isset($decoded)) {
+            var_dump($decoded);
+            $buffRate->set_id($decoded["rate"]["id"]);
+            $buffRate->set_type($decoded["rate"]["type"]);
+            $buffRate->set_recurrence($decoded["rate"]["recurrence"]);
+            $buffRate->set_price($decoded["rate"]["price"]);
+            $buffRate->set_beginDate($decoded["rate"]["beginDate"]);
+            $buffRate->set_endDate($decoded["rate"]["endDate"]);
+            $buffRate->set_currency($decoded["rate"]["currency"]);
+            $buffRate->set_active($decoded["rate"]["active"]);
+            $buffRate->set_channel_id($decoded["rate"]["channel_id"]);
+            $buffRate->set_channels_package_id($decoded["rate"]["channels_package_id"]);
+            $buffRate->set_time_quantity($decoded["rate"]["time_quantity"]);
+            $buffRate->set_time_unit($decoded["rate"]["time_unit"]);
+            $buffRate->set_multiply_by_quantity($decoded["rate"]["multiply_by_quantity"]);
+            $buffRate->set_start_method($decoded["rate"]["start_method"]);
+        } else {
+
+            trigger_error("Can't decode json to convert all Rate.", E_USER_ERROR);
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Can't decode single json to convert to Rate.");
+        }
+
+        $this->_currentObjet->set_currentRate($buffRate);
+    }
+
+    public function getAllRatebyId($live_id) {
+        throw new Exception('Not implemented');
+        if (is_numeric($live_id)) {
+
+            $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                    "/rate/" . $rate_id .
+                    "?bid=" . $this->_userSettings->getBroadcasterID() .
+                    "&apikey=" . $this->_userSettings->getApiKey();
+
+            $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+            $this->_APICall->ApiRequest("GET", $this->_fullUrlCall);
+
+            $decoded = $this->_APICall->getJsonDecoded();
+            $this->convertDecodedJsonToAllRate($decoded);
+
+            if (isset($decoded['error']['message'])) {
+                $message = "Error :  " . $decoded['error']['message'];
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
+                return $message;
+            }
+
+            return $this->_currentRate;
+        } else {
+            trigger_error("live_id is not numeric.", E_USER_ERROR);
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric.");
+        }
+    }
+
+    private function convertDecodedJsonToAllRate($Arraydecoded) {
+        $buffRate = new Rate();
+        $TabBufferAllRate;
+
+        if (isset($Arraydecoded)) {
+            foreach ($Arraydecoded['live'] as $i => $decoded) {
+                $buffRate->set_id($decoded["rate"]["id"]);
+                $buffRate->set_type($decoded["rate"]["type"]);
+                $buffRate->set_recurrence($decoded["rate"]["recurrence"]);
+                $buffRate->set_price($decoded["rate"]["price"]);
+                $buffRate->set_beginDate($decoded["rate"]["beginDate"]);
+                $buffRate->set_endDate($decoded["rate"]["endDate"]);
+                $buffRate->set_currency($decoded["rate"]["currency"]);
+                $buffRate->set_active($decoded["rate"]["active"]);
+                $buffRate->set_channel_id($decoded["rate"]["channel_id"]);
+                $buffRate->set_channels_package_id($decoded["rate"]["channels_package_id"]);
+                $buffRate->set_time_quantity($decoded["rate"]["time_quantity"]);
+                $buffRate->set_time_unit($decoded["rate"]["time_unit"]);
+                $buffRate->set_multiply_by_quantity($decoded["rate"]["multiply_by_quantity"]);
+                $buffRate->set_start_method($decoded["rate"]["start_method"]);
+                $TabBufferAllRate[$i] = $buffRate;
+            }
+            $this->_currentObjet->set_TabAllRate($TabBufferAllRate);
+        } else {
+
+            trigger_error("Can't decode json to convert all Rate.", E_USER_ERROR);
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Can't decode json to convert to all Rate.");
+        }
+    }
+
+    public function deleteRatebyId($live_id, $rate_id) {
+        throw new Exception('Not implemented');
     }
 
 }
