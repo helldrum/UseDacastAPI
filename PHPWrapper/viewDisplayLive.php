@@ -10,7 +10,7 @@ if ($prod == 1) {
     $pre = './';
 }
 
-include ($pre . "Autoload.php");
+include ($pre . "globalfunction.php");
 
 define('BID', '26708');
 define('API_KEY', '7c70028b237d85cda0cc');
@@ -77,12 +77,9 @@ try {
 </html>
 
 
-<?php 
+<?php
 
-function checkFormDataIntegrity(){
-    
-    
+function checkFormDataIntegrity() {
     
 }
-
 ?>

@@ -1,5 +1,5 @@
 <?php
-include_once ($pre . "Autoload.php");
+include_once ($pre . "globalfunction.php");
 
 function validatePostLiveForm() {
     unsetIsEmpty();
@@ -28,7 +28,7 @@ function validatePostLiveForm() {
                                                                     return $error;
                                                                 }
                                                                 unset($clean);
-                                                                cleanAndPostString($clean);
+                                                                cleanformVariables($clean);
                                                                 unset($_POST);
                                                                 $error = setPostLive($clean, $createLive, $userSetting);
 
@@ -82,20 +82,6 @@ function validatePostLiveForm() {
 
             return "Field Broadcaster Id missing.";
         }
-    }
-}
-
-function unsetIsEmpty() {
-    foreach (array_keys($_POST) as $key) {
-        if ($_POST[$key] == "") {
-            unset($_POST[$key]);
-        }
-    }
-}
-
-function cleanAndPostString(&$clean) {
-    foreach (array_keys($_POST) as $key) {
-        $clean[$key] = mysql_real_escape_string($_POST[$key]);
     }
 }
 
@@ -161,7 +147,7 @@ function setPostLive($clean, &$createLive, &$userSetting) {
 
     $liveDao = new DAOLive($userSetting, new Live());
     $error = $liveDao->create($createLive);
-    if(!$error){
+    if (!$error) {
         return "live creation success !";
     }
     return $error;
@@ -232,7 +218,9 @@ function setPostLive($clean, &$createLive, &$userSetting) {
                 <p>countries_id: <input type="number" name="countries_id"> <p>
                 <p>referers_id: <input type="number" name="referers_id"> <p>
                 <p><input type="submit" value="Submit"></p>
-                <p class="DisplayError"><?php var_dump(validatePostLiveForm()); ?></p>
+                <p class="DisplayMessage"><?php echo print_r($message); ?></p>
+
+
             </form>
         </div>
     </body>
