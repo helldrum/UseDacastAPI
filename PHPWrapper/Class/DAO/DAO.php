@@ -12,8 +12,6 @@ interface DAO {
 
     public function create($object);
 
-    public function update($object);
-
     public function deleteById($id);
 
     public function getById($id);

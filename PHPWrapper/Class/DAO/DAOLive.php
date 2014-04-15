@@ -7,6 +7,7 @@
  * @author Jonathan CHARDON
  */
 include_once ($pre . "Autoload.php");
+require_once 'KLogger.php';
 
 class DAOLive implements DAO {
 
@@ -15,8 +16,10 @@ class DAOLive implements DAO {
     private $_currentObjet;
     private $_fullUrlCall;
     private $_allObject;
+    private $_logError;
 
     function __construct($userSettings, $live) {
+        $this->_logError = new KLogger("error.log", KLogger::ERR);
         if (isset($live)) {
 
             $this->_currentObjet = $live;
@@ -27,6 +30,7 @@ class DAOLive implements DAO {
         if (isset($userSettings) && ($userSettings instanceof UserApiSettings)) {
             $this->_userSettings = $userSettings;
         } else {
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "UserSetting miss initialized in DAOLive contructor" . print_r($userSettings, true) . $e->getMessage());
             trigger_error("userSetting miss initialized in DAOLive contructor.", E_USER_ERROR);
         }
     }
@@ -61,6 +65,7 @@ class DAOLive implements DAO {
             }
         } else {
             trigger_error("live_id is not numeric.", E_USER_ERROR);
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id . " " . $e->getMessage());
         }
     }
 
@@ -108,6 +113,8 @@ class DAOLive implements DAO {
             $this->_currentObjet->setHls($decoded["live"]["hls"]);
         } else {
             $message = "Error :  no way to decode Live json.";
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  no way to decode Live json." . print_r($decoded["live"], true) . " " . $e->getMessage());
+
             return $message;
         }
     }
@@ -172,6 +179,7 @@ class DAOLive implements DAO {
             }
         } else {
             $message = "Error :  no way to decode all Live json.";
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  no way to decode All Live json." . print_r($decoded["live"], true) . " " . $e->getMessage());
             return $message;
         }
     }
@@ -188,7 +196,8 @@ class DAOLive implements DAO {
         if ($live instanceof Live) {
             $this->_currentObjet = $live;
         } else {
-            trigger_error("objet is not instance of Live.", E_USER_ERROR);
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  objet is not instance of Live." . print_r($decoded["live"], true) . " " . $e->getMessage());
+            trigger_error("Objet is not instance of Live.", E_USER_ERROR);
         }
     }
 
@@ -211,6 +220,7 @@ class DAOLive implements DAO {
 
             if (isset($decoded['error']['message'])) {
                 $message = "Error :  " . $decoded['error']['message'];
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
             } else {
                 $message = $decoded['message'];
             }
@@ -238,12 +248,14 @@ class DAOLive implements DAO {
 
             if (isset($decoded['error']['message'])) {
                 $message = "Error :  " . $decoded['error']['message'];
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
                 return $message;
             }
 
 
             return $this->_currentObjet;
         } else {
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "live parameter is not a live object");
             trigger_error("live parameter is not a live object.", E_USER_ERROR);
         }
     }
@@ -252,24 +264,46 @@ class DAOLive implements DAO {
         $this->_fullUrlCall = self::API_URL . "/" . $live_id .
                 "?bid=" . $this->_userSettings->getBroadcasterID() .
                 "&apikey=" . $this->_userSettings->getApiKey() .
-                "&title=" . urlencode($live->getTitle()) .
-                "&description=" . urlencode($live->getDescription()) .
-                "&custom_data=" . urlencode($live->getCustom_data()) .
-                "&stream_type=" . urlencode($live->getStream_type()) .
-                "&backup_url=" . urlencode($live->getBackup_url()) .
-                "&stream_category=" . urlencode($live->getStream_category()) .
-                "&activateChat=" . urlencode($live->getActivateChat()) .
-                "&autoplay=" . urlencode($live->getAutoplay()) .
-                "&publish_on_dacast=" . urlencode($live->getPublish_on_dacast()) .
-                "&external_video_page=" . urlencode($live->getExternal_video_page()) .
-                "&player_width=" . urlencode($live->getPlayer_width()) .
-                "&player_height=" . urlencode($live->getPlayer_height()) .
-                "&countries_id=" . urlencode($live->getCountries_id()) .
-                "&referers_id=" . urlencode($live->getReferers_id());
-    }
-
-    public function update($live) {
-        
+                "&title=" . urlencode($live->getTitle());
+        if (($live->getDescription()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&description=" . urlencode($live->getDescription());
+        }
+        if ($live->getCustom_data() != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&custom_data=" . urlencode($live->getCustom_data());
+        }
+        if ($live->getStream_type() != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&stream_type=" . urlencode($live->getStream_type());
+        }
+        if ($live->getBackup_url() != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&backup_url=" . urlencode($live->getBackup_url());
+        }
+        if ($live->getStream_category() != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&stream_category=" . urlencode($live->getStream_category());
+        }
+        if ($live->getActivateChat() != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&activateChat=" . urlencode($live->getActivateChat());
+        }
+        if ($live->getAutoplay() != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&autoplay=" . urlencode($live->getAutoplay());
+        }
+        if ($live->getPublish_on_dacast() != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&publish_on_dacast=" . urlencode($live->getPublish_on_dacast());
+        }
+        if ($live->getExternal_video_page() != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&external_video_page=" . urlencode($live->getExternal_video_page());
+        }
+        if ($live->getPlayer_width() != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&player_width=" . urlencode($live->getPlayer_width());
+        }
+        if ($live->getPlayer_height() != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&player_height=" . urlencode($live->getPlayer_height());
+        }
+        if ($live->getCountries_id() != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&countries_id=" . urlencode($live->getCountries_id());
+        }
+        if ($live->getReferers_id() != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&referers_id=" . urlencode($live->getReferers_id());
+        }
     }
 
     public function reset_allObject() {
@@ -288,15 +322,17 @@ class DAOLive implements DAO {
                 $decoded = $this->_APICall->getJsonDecoded();
 
                 if (isset($decoded['error']['message'])) {
+                    $this->_logError->logError(__LINE__ . " " . __FILE__ . $decoded['error']['message']);
                     $message = "Error :  " . $decoded['error']['message'];
                     return $message;
                 }
                 return $decoded;
             } else {
-
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric " . $live_id);
                 trigger_error("live_id is not numeric.", E_USER_ERROR);
             }
         } else {
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Unknown type of embed code." . $type);
             trigger_error("Unknown type of embed code.", E_USER_ERROR);
         }
     }

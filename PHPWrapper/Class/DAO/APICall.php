@@ -5,6 +5,8 @@
  *
  * @author Jonathan CHARDON
  */
+require_once 'KLogger.php';
+
 class APICall {
 
     private $_apiKey;
@@ -12,8 +14,12 @@ class APICall {
     private $_action;
     private $_jsonDecoded;
     private $_url;
+    private $_log;
+    private $_logError;
 
     function __construct($_apiKey, $_broadcasterId, $_url) {
+        $this->_log = new KLogger("callApi.log", KLogger::INFO);
+        $this->_logError = new KLogger("error.log", KLogger::ERR);
         $this->_apiKey = $_apiKey;
         $this->_broadcasterId = $_broadcasterId;
         $this->_url = $_url;
@@ -60,6 +66,8 @@ class APICall {
     }
 
     function ApiRequest($action, $url) {
+        $this->_log->logInfo("action = $action ; url= $url");
+
         try {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -93,25 +101,32 @@ class APICall {
 
             $this->_jsonDecoded = json_decode($output, true);
         } catch (Exception $e) {
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . " " . $e->getMessage());
             trigger_error($e->getMessage(), E_USER_ERROR);
         }
     }
 
     function ApiRequestWithRawData($url) {
         //use to make API call for the Raw return (like embed code)
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
-        curl_setopt($ch, CURLOPT_USERAGENT, "MozillaXYZ/1.0");
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        $this->_log->logInfo("GET RAW DATA url= $url");
+        try {
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
+            curl_setopt($ch, CURLOPT_USERAGENT, "MozillaXYZ/1.0");
+            curl_setopt($ch, CURLOPT_VERBOSE, 1);
 
-        $output = curl_exec($ch);
-   
-        $this->_jsonDecoded = $output;
-        curl_close($ch);
+            $output = curl_exec($ch);
+
+            $this->_jsonDecoded = $output;
+            curl_close($ch);
+        } catch (Exception $e) {
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . " GET RAW DATA url = " . $url . $e->getMessage());
+            trigger_error($e->getMessage(), E_USER_ERROR);
+        }
     }
 
 }
