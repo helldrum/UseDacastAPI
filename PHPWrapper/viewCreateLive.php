@@ -30,7 +30,7 @@ function validatePostLiveForm() {
                                                                 unset($clean);
                                                                 cleanformVariables($clean);
                                                                 unset($_POST);
-                                                                $error = setPostLive($clean, $createLive, $userSetting);
+                                                                $error = setPostLive($clean);
 
                                                                 if ($error) {
                                                                     return $error;
@@ -120,7 +120,7 @@ function validateOptionalField() {
     }
 }
 
-function setPostLive($clean, &$createLive, &$userSetting) {
+function setPostLive($clean, &$createLive) {
 
     $userSetting = new UserApiSettings($clean["bid"], $clean["apikey"]);
     $createLive = new Live();

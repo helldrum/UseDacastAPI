@@ -1,22 +1,9 @@
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
-    </head>
-    <body>
-        <div>
 
-            <form action = "" method = "POST">
-                <p>broadcaster id: <input type = "text" name = "bid" value = "26708"> <p>
-                <p>apikey: <input type = "text" name = "apikey" value = "7c70028b237d85cda0cc"> <p>
-                <p>live_id(can't be 0): <input type = "text" name = "live_id"> <p>
-            </form>
-        </div>
-    </body>
-</html>   
+
 
 
 <?php
+include_once ($pre . "globalfunction.php");
 
 function validateDeleteForm() {
 
@@ -28,7 +15,11 @@ function validateDeleteForm() {
                         unset($clean);
                         cleanformVariables($clean);
                         unset($_POST);
-                        $error = setDeleteLive($clean, $createLive, $userSetting);
+                        $message = setDeleteLive($clean);
+                        if(isset($message)){
+                            return $message;
+                            
+                        }
                     } else {
                         return "live id can't be 0.";
                     }
@@ -46,6 +37,29 @@ function validateDeleteForm() {
     }
 }
 
-setDeleteLive($clean, $createLive, $userSetting);
+function setDeleteLive(&$clean) {
+    $userSetting = new UserApiSettings($clean["bid"], $clean["apikey"]);
+    $live = new Live();
+    $liveDao = new DAOLive($userSetting, $live);
+    $message = $liveDao->deleteById($clean["live_id"]);
+    return $message;
+}
 ?>
-                    
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+        <div>
+
+            <form action = "" method = "POST">
+                <p>broadcaster id: <input type = "text" name = "bid" value = "26708"> <p>
+                <p>apikey: <input type = "text" name = "apikey" value = "7c70028b237d85cda0cc"> <p>
+                <p>live_id(can't be 0): <input type = "text" name = "live_id"> <p>
+                <p><input type="submit" value="Submit"></p>
+            </form>
+            <p class="DisplayMessage"><?php echo validateDeleteForm(); ?></p>
+        </div>
+    </body>
+</html>             

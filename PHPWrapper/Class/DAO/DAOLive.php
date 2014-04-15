@@ -6,7 +6,7 @@
  *
  * @author Jonathan CHARDON
  */
-include_once ($pre . "Autoload.php");
+include_once ($pre . "globalfunction.php");
 require_once 'KLogger.php';
 
 class DAOLive implements DAO {
