@@ -438,10 +438,13 @@ class Live {
         return $this->_currentRate;
     }
 
+    public function set_currentRate($_currentRate) {
+        $this->_currentRate = $_currentRate;
+    }
+
     public function set_TabAllRate($_TabAllRate) {
 //TODO not Implemented yet
         $this->_tabAllRate = $_TabAllRate;
-        throw new Exception('Not implemented');
     }
 
     public function reset_ALLRate() {

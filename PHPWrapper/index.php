@@ -58,22 +58,27 @@ try {
     // $liveDao->getRatebyId(33482, 12074);
     // $rate12074Live33482 = $liveDao->get_currentObjet()->get_currentRate();
     //var_dump($rate12074Live33482);
-
-    $tabAllLive = $liveDao->get_all();
+    //  $tabAllLive = $liveDao->get_all();
+    // foreach ($tabAllLive as $live) {
+    //     echo $live;
+    // }
+    //get rate 12075 from live 12075
+   // $rate = $liveDao->getRatebyId(34808, 12075);
+   // echo $rate;
     
-    foreach ($tabAllLive as $live ){
-        echo $live;
-    }
+    //$message = $liveDao->deleteById(34808, 12075);
+    //echo $message;
+    //Element #34808 of type live has been deleted 
+    
+    
 } catch (Exception $e) {
     echo $e->getMessage();
 }
 ?>
 
-
-
 <html>
     <head>
-        <title>TODO supply a title</title>
+
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
     </head>
