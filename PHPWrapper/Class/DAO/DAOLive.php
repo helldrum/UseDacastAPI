@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This class is use to interact with the Live function API SELECT, CREATE, UPDATE, DELETE 
- * get embed code of the Live function.
+ * This class is use to interact with the Live function API: SELECT, CREATE, UPDATE, DELETE 
+ * get embed code, and manage coupon and rates.
  *
  * @author Jonathan CHARDON
  */
@@ -360,7 +360,7 @@ class DAOLive implements DAO {
     }
 
     public function createRateById($live_id, $rate) {
-        throw new Exception('Not finish due to currency issues');
+        throw new Exception('pending function due to currency issues');
 
         if (is_numeric($live_id)) {
             if ($live_id != 0) {
@@ -459,8 +459,8 @@ class DAOLive implements DAO {
                     trigger_error("rate_id is not numeric.", E_USER_ERROR);
                 }
             } else {
-                $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id = 0 use the function getAllLive instead.");
-                trigger_error("live_id = 0 use the function getAllLive instead.", E_USER_ERROR);
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id = 0 use the function getAllRate instead.");
+                trigger_error("live_id = 0 use the function getAllRate instead.", E_USER_ERROR);
             }
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id);
@@ -488,12 +488,8 @@ class DAOLive implements DAO {
 
             return $this->_currentLive->set_currentRate($buffRate);
         } else {
-
-
             $this->_logError->logInfo(__LINE__ . " " . __FILE__ . "Empty Rate result.");
-            return
-
-                    "Empty Rate result";
+            return "Empty Rate result";
         }
     }
 
@@ -595,19 +591,87 @@ class DAOLive implements DAO {
         }
     }
 
-    public function createCouponById($object_id, $rate) {
+    public function getCouponbyId($live_id, $coupon_id) {
+   
+        if (is_numeric($live_id)) {
+            if ($live_id != 0) {
+                if (is_numeric($coupon_id)) {
+                    if ($coupon_id != 0) {
+
+                        $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                                "/coupon/" . $coupon_id .
+                                "?bid=" . $this->_userSettings->getBroadcasterID() .
+                                "&apikey=" . $this->_userSettings->getApiKey();
+
+                        $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+                        $this->_APICall->ApiRequest("GET", $this->_fullUrlCall);
+
+                        $decoded = $this->_APICall->getJsonDecoded();
+
+                        $message = $this->convertDecodedJsonToCoupon($decoded);
+
+                        if (isset($message)) {
+                            return $message;
+                        }
+                        if (isset($decoded['error']['message'])) {
+                            $message = "Error :  " . $decoded['error']['message'];
+                            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
+
+                            return $message;
+                        }
+
+                        return $this->_currentLive->get_currentCoupon();
+                    } else {
+                        $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id = 0 use the function getAllCoupon instead.");
+                        trigger_error("coupon_id = 0 use the function getAllCoupon instead.", E_USER_ERROR);
+                    }
+                } else {
+                    $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id is not numeric.");
+                    trigger_error("coupon_id is not numeric.", E_USER_ERROR);
+                }
+            } else {
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id = 0 use the function getAllCoupon instead.");
+                trigger_error("live_id = 0 use the function getAllCoupon instead.", E_USER_ERROR);
+            }
+        } else {
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id);
+            trigger_error("live_id is not numeric.", E_USER_ERROR);
+        }
+    }
+
+    private function convertDecodedJsonToCoupon($decoded) {
+        $buffCoupon = new Coupon();
+        if (isset($decoded)) {
+            $buffCoupon->set_id($decoded["coupon"]["id"]);
+            $buffCoupon->set_code($decoded["coupon"]["code"]);
+            $buffCoupon->set_value($decoded["coupon"]["value"]);
+            $buffCoupon->set_currency($decoded["coupon"]["currency"]);
+            $buffCoupon->set_max($decoded["coupon"]["max"]);
+            $buffCoupon->set_type($decoded["coupon"]["type"]);
+            $buffCoupon->set_rate_type($decoded["coupon"]["rate_type"]);
+            $buffCoupon->set_media_type($decoded["coupon"]["media_type"]);
+            $buffCoupon->set_media_id($decoded["coupon"]["media_id"]);
+            $buffCoupon->set_gift_type($decoded["coupon"]["gift_type"]);
+            $buffCoupon->set_gift_id($decoded["coupon"]["gift_id"]);
+            $buffCoupon->set_status($decoded["coupon"]["status"]);
+            $buffCoupon->set_user_id($decoded["coupon"]["user_id"]);
+
+            return $this->_currentLive->set_currentCoupon($buffCoupon);
+        } else {
+            $this->_logError->logInfo(__LINE__ . " " . __FILE__ . "Empty Coupon result.");
+            return "Empty Coupon result";
+        }
+    }
+
+    public function createCouponById($live_id, $coupon) {
         trigger_error("not yet implemented.", E_USER_ERROR);
     }
 
-    public function deleteCouponbyId($object_id, $rate_id) {
+    public function deleteCouponbyId($live_id, $coupon_id) {
         trigger_error("not yet implemented.", E_USER_ERROR);
     }
 
-    public function getAllCouponbyId($object_id) {
-        trigger_error("not yet implemented.", E_USER_ERROR);
-    }
-
-    public function getCouponbyId($object_id, $coupon_id) {
+    public function getAllCouponbyId($live_id) {
         trigger_error("not yet implemented.", E_USER_ERROR);
     }
 

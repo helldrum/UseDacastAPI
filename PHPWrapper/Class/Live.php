@@ -55,7 +55,9 @@ class Live {
     private $_hls;
     private $_backup_url;
     private $_tabAllRate;
+    private $_tabAllCoupon;
     private $_currentRate;
+    private $_currentCoupon;
 
     function __construct($id = 0, $title = 'default title', $description = 'default description', $custom_data = null, $online = 0, $stream_type = 1, $acquisition = null, $http_url = null, $stream_category = 20, $creationDate = null, $saveDate = null, $user_id = 0, $bandWidth = null, $activateChat = null, $autoplay = 1, $noframe_security = 2, $enable_ads = 0, $enable_subscription = 0, $enable_payperview = 0, $enable_coupon = 0, $is_private = 0, $publish_on_dacast = 1, $external_video_page = '', $seo_index = 1, $archive_filename = null, $companion_position = "right", $theme_id = null, $watermark_position = 0, $watermark_size = 0, $watermark_url = null, $id_player_size = 0, $player_width = 640, $player_height = 480, $referers_id = 0, $countries_id = 0, $thumbnail_id = null, $splashscreen_id = null, $thumbnail_online = null, $hds = null, $hls = null, $backup_url = '') {
 
@@ -443,7 +445,6 @@ class Live {
     }
 
     public function set_TabAllRate($_TabAllRate) {
-//TODO not Implemented yet
         $this->_tabAllRate = $_TabAllRate;
     }
 
@@ -451,8 +452,23 @@ class Live {
 
         unset($this->_tabAllRate);
     }
+    public function get_tabAllCoupon() {
+        return $this->_tabAllCoupon;
+    }
 
-    public function __toString() {
+    public function get_currentCoupon() {
+        return $this->_currentCoupon;
+    }
+
+    public function set_tabAllCoupon($_tabAllCoupon) {
+        $this->_tabAllCoupon = $_tabAllCoupon;
+    }
+
+    public function set_currentCoupon($_currentCoupon) {
+        $this->_currentCoupon = $_currentCoupon;
+    }
+
+        public function __toString() {
 
         $toString = "live_id = $this->_live_id <br>
     title = $this->_title <br> 
