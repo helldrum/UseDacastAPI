@@ -102,7 +102,7 @@ class APICall {
             $this->_jsonDecoded = json_decode($output, true);
         } catch (Exception $e) {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . " " . $e->getMessage());
-            trigger_error($e->getMessage(), E_USER_ERROR);
+            trigger_error($e->getMessage(), E_WARNING);
         }
     }
 
@@ -125,7 +125,7 @@ class APICall {
             curl_close($ch);
         } catch (Exception $e) {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . " GET RAW DATA url = " . $url . $e->getMessage());
-            trigger_error($e->getMessage(), E_USER_ERROR);
+            trigger_error($e->getMessage(), E_WARNING);
         }
     }
 

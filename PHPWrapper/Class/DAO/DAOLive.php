@@ -31,7 +31,7 @@ class DAOLive implements DAO {
             $this->_userSettings = $userSettings;
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "UserSetting miss initialized in DAOLive contructor" . print_r($userSettings, true) . $e->getMessage());
-            trigger_error("userSetting miss initialized in DAOLive contructor.", E_USER_ERROR);
+            trigger_error("userSetting miss initialized in DAOLive contructor.", E_WARNING);
         }
     }
 
@@ -64,7 +64,7 @@ class DAOLive implements DAO {
             $this->_currentLive = $live;
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  objet is not instance of Live." . print_r($decoded["live"], true) . " " . $e->getMessage());
-            trigger_error("Objet is not instance of Live.", E_USER_ERROR);
+            trigger_error("Objet is not instance of Live.", E_WARNING);
         }
     }
 
@@ -84,9 +84,11 @@ class DAOLive implements DAO {
             $this->_APICall->ApiRequest("GET", $this->_fullUrlCall);
 
             $decoded = $this->_APICall->getJsonDecoded();
-            $message = $this->convertDecodedJsonToLive($decoded);
+            $this->convertDecodedJsonToLive($decoded);
 
-            if (isset($message)) {
+            if (isset($decoded['error']['message'])) {
+                $message = "Error :  " . $decoded['error']['message'];
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
                 $functionReturn = $message;
             } else {
                 $functionReturn = $this->_currentLive;
@@ -102,10 +104,10 @@ class DAOLive implements DAO {
                 $inputCorrect = true;
             } else {
 
-                trigger_error("live_id = 0 use the function getAllLive instead.", E_USER_ERROR);
+                trigger_error("live_id = 0 use the function getAllLive instead.", E_WARNING);
             }
         } else {
-            trigger_error("live_id is not numeric.", E_USER_ERROR);
+            trigger_error("live_id is not numeric.", E_WARNING);
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id . " " . $e->getMessage());
         }
         return $inputCorrect;
@@ -153,11 +155,6 @@ class DAOLive implements DAO {
             $this->_currentLive->setThumbnail_online($decoded["live"]["thumbnail_online"]);
             $this->_currentLive->setHds($decoded["live"]["hds"]);
             $this->_currentLive->setHls($decoded["live"]["hls"]);
-        } else {
-            $message = "Error :  no way to decode Live json.";
-            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  no way to decode Live json." . print_r($decoded["live"], true) . " " . $e->getMessage());
-
-            return $message;
         }
     }
 
@@ -237,25 +234,28 @@ class DAOLive implements DAO {
     }
 
     public function deleteById($live_id) {
-        $this->testDeleteByIdInput($live_id);
-        $this->_fullUrlCall = self::API_URL . "/" . $live_id .
-                "?bid=" . $this->_userSettings->getBroadcasterID() .
-                "&apikey=" . $this->_userSettings->getApiKey();
+        $inputCorrect = $this->testDeleteByIdInput($live_id);
+        if ($inputCorrect) {
+            $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                    "?bid=" . $this->_userSettings->getBroadcasterID() .
+                    "&apikey=" . $this->_userSettings->getApiKey();
 
 
-        $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
-        $this->_APICall->ApiRequest("DELETE", $this->_fullUrlCall);
+            $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+            $this->_APICall->ApiRequest("DELETE", $this->_fullUrlCall);
 
-        $decoded = $this->_APICall->getJsonDecoded();
+            $decoded = $this->_APICall->getJsonDecoded();
 
-        if (isset($decoded['error']['message'])) {
-            $message = "Error :  " . $decoded['error']['message'];
-            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
-        } else {
-            $message = $decoded['message'];
+            if (isset($decoded['error']['message'])) {
+                $message = "Error :  " . $decoded['error']['message'];
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
+            } else {
+
+                $message = $decoded['message'];
+            }
+
+            return $message;
         }
-
-        return $message;
     }
 
     private function testDeleteByIdInput($live_id) {
@@ -263,7 +263,7 @@ class DAOLive implements DAO {
         if (is_numeric($live_id)) {
             $inputCorrect = true;
         } else {
-            trigger_error("live_id is not numeric.", E_USER_ERROR);
+            trigger_error("live_id is not numeric.", E_WARNING);
         }
         return $inputCorrect;
     }
@@ -298,7 +298,7 @@ class DAOLive implements DAO {
             $inputCorrect = true;
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live parameter is not a live object");
-            trigger_error("live parameter is not a live object.", E_USER_ERROR);
+            trigger_error("live parameter is not a live object.", E_WARNING);
         }
         return $inputCorrect;
     }
@@ -379,11 +379,11 @@ class DAOLive implements DAO {
                 $inputCorrect = true;
             } else {
                 $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric " . $live_id);
-                trigger_error("live_id is not numeric.", E_USER_ERROR);
+                trigger_error("live_id is not numeric.", E_WARNING);
             }
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "Unknown type of embed code." . $type);
-            trigger_error("Unknown type of embed code.", E_USER_ERROR);
+            trigger_error("Unknown type of embed code.", E_WARNING);
         }
 
         return $inputCorrect;
@@ -419,13 +419,13 @@ class DAOLive implements DAO {
                 if ($rate instanceof Rate) {
                     $inputCorrect = true;
                 } else {
-                    trigger_error("Parameter rate is not a instance of Rate.", E_USER_ERROR);
+                    trigger_error("Parameter rate is not a instance of Rate.", E_WARNING);
                 }
             } else {
-                trigger_error("Parameter live_id can be set to 0.", E_USER_ERROR);
+                trigger_error("Parameter live_id can be set to 0.", E_WARNING);
             }
         } else {
-            trigger_error("Parameter live_id is not numeric.", E_USER_ERROR);
+            trigger_error("Parameter live_id is not numeric.", E_WARNING);
         }
         return $inputCorrect;
     }
@@ -500,19 +500,19 @@ class DAOLive implements DAO {
                         $inputCorrect = true;
                     } else {
                         $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id = 0 use the function getAllRate instead.");
-                        trigger_error("rate_id = 0 use the function getAllRate instead.", E_USER_ERROR);
+                        trigger_error("rate_id = 0 use the function getAllRate instead.", E_WARNING);
                     }
                 } else {
                     $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id is not numeric.");
-                    trigger_error("rate_id is not numeric.", E_USER_ERROR);
+                    trigger_error("rate_id is not numeric.", E_WARNING);
                 }
             } else {
                 $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id = 0 use the function getAllRate instead.");
-                trigger_error("live_id = 0 use the function getAllRate instead.", E_USER_ERROR);
+                trigger_error("live_id can't be set to 0.", E_WARNING);
             }
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id);
-            trigger_error("live_id is not numeric.", E_USER_ERROR);
+            trigger_error("live_id is not numeric.", E_WARNING);
         }
         return $inputCorrect;
     }
@@ -562,7 +562,7 @@ class DAOLive implements DAO {
             }
             return $this->_currentLive->get_TabAllRate();
         } else {
-            trigger_error("live_id is not numeric.", E_USER_ERROR);
+            trigger_error("live_id is not numeric.", E_WARNING);
             $this->_logError->logError(__LINE__ . " " . __FILE__ .
                     "live_id is not numeric.");
         }
@@ -570,7 +570,6 @@ class DAOLive implements DAO {
 
     private function convertDecodedJsonToAllRate($Arraydecoded) {
         $buffRate = new Rate();
-        $TabBufferAllRate;
 
         if (isset($Arraydecoded)) {
             foreach ($Arraydecoded['rate'] as $i => $decoded) {
@@ -594,51 +593,59 @@ class DAOLive implements DAO {
             $this->_currentLive->set_TabAllRate($TabBufferAllRate);
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "Empty Rate result.");
-            trigger_error("Empty Rate result.", E_USER_ERROR);
+            trigger_error("Empty Rate result.", E_WARNING);
         }
     }
 
     public function deleteRatebyId($live_id, $rate_id) {
+        
+        $inputCorrect = $this->testDeleteRateByIdInput($live_id, $rate_id);
+        if ($inputCorrect) {
+            $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                    "/rate/" . $rate_id .
+                    "?bid=" . $this->_userSettings->getBroadcasterID() .
+                    "&apikey=" . $this->_userSettings->getApiKey();
+            
+            $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+            $this->_APICall->ApiRequest("DELETE", $this->_fullUrlCall);
+
+            $decoded = $this->_APICall->getJsonDecoded();
+            
+            if (isset($decoded['error']['message'])) {
+                $message = "Error :  " . $decoded['error']['message'];
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
+            } else {
+                $message = $decoded['message'];
+            }
+
+            return $message;
+        }
+    }
+
+    private function testDeleteRateByIdInput($live_id, $rate_id) {
+        $inputCorrect = false;
         if (is_numeric($live_id)) {
             if ($live_id != 0) {
                 if (is_numeric($rate_id)) {
                     if ($rate_id != 0) {
-
-                        $this->_fullUrlCall = self::API_URL . "/" . $live_id .
-                                "/rate/" . $rate_id .
-                                "?bid=" . $this->_userSettings->getBroadcasterID() .
-                                "&apikey=" . $this->_userSettings->getApiKey();
-
-
-                        $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
-                        $this->_APICall->ApiRequest("DELETE", $this->_fullUrlCall);
-
-                        $decoded = $this->_APICall->getJsonDecoded();
-
-                        if (isset($decoded['error']['message'])) {
-                            $message = "Error :  " . $decoded['error']['message'];
-                            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
-                        } else {
-                            $message = $decoded['message'];
-                        }
-
-                        return $message;
+                        $inputCorrect = true;
                     } else {
-                        trigger_error("rate_id is not numeric.", E_USER_ERROR);
+                        trigger_error("rate_id is not numeric.", E_WARNING);
                     }
                 } else {
-                    trigger_error("Parameter rate_id can be set to 0.", E_USER_ERROR);
+                    trigger_error("Parameter rate_id can be set to 0.", E_WARNING);
                 }
             } else {
-                trigger_error("Parameter live_id can be set to 0.", E_USER_ERROR);
+                trigger_error("Parameter live_id can be set to 0.", E_WARNING);
             }
         } else {
-            trigger_error("live_id is not numeric.", E_USER_ERROR);
+            trigger_error("live_id is not numeric.", E_WARNING);
         }
+        return $inputCorrect;
     }
 
     public function getCouponbyId($live_id, $coupon_id) {
-        throw new Exception('pending function wrong return');
+     //   throw new Exception('pending function wrong return');
         $inputCorrect = $this->testgetCouponbyIdInput($live_id, $coupon_id);
         if ($inputCorrect) {
             $this->_fullUrlCall = self::API_URL . "/" . $live_id .
@@ -674,19 +681,19 @@ class DAOLive implements DAO {
                         $inputCorrect = true;
                     } else {
                         $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id = 0 use the function getAllCoupon instead.");
-                        trigger_error("coupon_id = 0 use the function getAllCoupon instead.", E_USER_ERROR);
+                        trigger_error("coupon_id = 0 use the function getAllCoupon instead.", E_WARNING);
                     }
                 } else {
                     $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id is not numeric.");
-                    trigger_error("coupon_id is not numeric.", E_USER_ERROR);
+                    trigger_error("coupon_id is not numeric.", E_WARNING);
                 }
             } else {
                 $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id = 0 use the function getAllCoupon instead.");
-                trigger_error("live_id = 0 use the function getAllCoupon instead.", E_USER_ERROR);
+                trigger_error("live_id = 0 use the function getAllCoupon instead.", E_WARNING);
             }
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id);
-            trigger_error("live_id is not numeric.", E_USER_ERROR);
+            trigger_error("live_id is not numeric.", E_WARNING);
         }
         return $inputCorrect;
     }
@@ -742,13 +749,13 @@ class DAOLive implements DAO {
                 if ($coupon instanceof Coupon) {
                     $inputCorrect = true;
                 } else {
-                    trigger_error("Parameter rate is not a instance of Rate.", E_USER_ERROR);
+                    trigger_error("Parameter rate is not a instance of Rate.", E_WARNING);
                 }
             } else {
-                trigger_error("Parameter live_id can be set to 0.", E_USER_ERROR);
+                trigger_error("Parameter live_id can be set to 0.", E_WARNING);
             }
         } else {
-            trigger_error("Parameter live_id is not numeric.", E_USER_ERROR);
+            trigger_error("Parameter live_id is not numeric.", E_WARNING);
         }
         return $inputCorrect;
     }
@@ -778,11 +785,58 @@ class DAOLive implements DAO {
     }
 
     public function deleteCouponbyId($live_id, $coupon_id) {
-        trigger_error("not yet implemented.", E_USER_ERROR);
+        $inputCorrect = $this->testDeleteCouponByIdInput($live_id, $coupon_id);
+        if ($inputCorrect) {
+            $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                    "/coupon/" . $coupon_id .
+                    "?bid=" . $this->_userSettings->getBroadcasterID() .
+                    "&apikey=" . $this->_userSettings->getApiKey();
+
+
+            $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+            $this->_APICall->ApiRequest("DELETE", $this->_fullUrlCall);
+
+            $decoded = $this->_APICall->getJsonDecoded();
+
+            if (isset($decoded['error']['message'])) {
+                $message = "Error :  " . $decoded['error']['message'];
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
+            } else {
+                $message = $decoded['message'];
+            }
+
+            return $message;
+        }
+    }
+
+    private function testDeleteCouponByIdInput($live_id, $coupon_id) {
+        $inputCorrect = false;
+        if (is_numeric($live_id)) {
+            if ($live_id != 0) {
+                if (is_numeric($coupon_id)) {
+                    if ($coupon_id != 0) {
+                        $inputCorrect = true;
+                    } else {
+                        $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id = 0 use the function getAllCoupon instead.");
+                        trigger_error("coupon_id = 0 use the function getAllCoupon instead.", E_WARNING);
+                    }
+                } else {
+                    $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id is not numeric.");
+                    trigger_error("coupon_id is not numeric.", E_WARNING);
+                }
+            } else {
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id = 0 use the function getAllCoupon instead.");
+                trigger_error("live_id = 0 use the function getAllCoupon instead.", E_WARNING);
+            }
+        } else {
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id);
+            trigger_error("live_id is not numeric.", E_WARNING);
+        }
+        return $inputCorrect;
     }
 
     public function getAllCouponbyId($live_id) {
-        trigger_error("not yet implemented.", E_USER_ERROR);
+        trigger_error("not yet implemented.", E_WARNING);
     }
 
 }

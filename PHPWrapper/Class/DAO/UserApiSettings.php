@@ -17,7 +17,7 @@ class UserApiSettings {
             $this->_broadcasterID = $broadcasterID;
             $this->_ApiKey = $ApiKey;
         } else {
-            trigger_error("BID is not numeric.", E_USER_ERROR);
+            trigger_error("BID is not numeric.", E_WARNING);
         }
     }
 
