@@ -14,7 +14,6 @@ class DAOLive implements DAO {
     private $_APICall;
     private $_userSettings;
     private $_currentLive;
-    private $_currentRate;
     private $_fullUrlCall;
     private $_tabAllLive;
     private $_logError;
@@ -54,6 +53,10 @@ class DAOLive implements DAO {
 
     public function reset_tabAllLive() {
         unset($this->_tabAllLive);
+    }
+
+    public function reset_tabAllRate() {
+        unset($this->_tabAllRate);
     }
 
     public function set_currentObjet($live) {
@@ -374,9 +377,7 @@ class DAOLive implements DAO {
                         $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
                         return $message;
                     }
-
-
-                    return $this->_currentLive;
+                    return $this->_currentLive->get_currentRate();
                 } else {
                     trigger_error("Parameter rate is not a instance of Rate.", E_USER_ERROR);
                 }
@@ -448,7 +449,7 @@ class DAOLive implements DAO {
                             return $message;
                         }
 
-                        return $this->_currentRate;
+                        return $this->_currentLive->get_currentRate();
                     } else {
                         $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id = 0 use the function getAllRate instead.");
                         trigger_error("rate_id = 0 use the function getAllRate instead.", E_USER_ERROR);
@@ -485,7 +486,7 @@ class DAOLive implements DAO {
             $buffRate->set_multiply_by_quantity($decoded["rate"]["multiply_by_quantity"]);
             $buffRate->set_start_method($decoded["rate"]["start_method"]);
 
-            return $this->_currentRate = $buffRate;
+            return $this->_currentLive->set_currentRate($buffRate);
         } else {
 
 
@@ -497,7 +498,7 @@ class DAOLive implements DAO {
     }
 
     public function getAllRatebyId($live_id) {
-        throw new Exception('Not implemented');
+
         if (is_numeric($live_id)) {
 
             $this->_fullUrlCall = self::API_URL . "/" . $live_id .
@@ -517,8 +518,7 @@ class DAOLive implements DAO {
 
                 return $message;
             }
-
-            return $this->_currentRate;
+            return $this->_currentLive->get_TabAllRate();
         } else {
             trigger_error("live_id is not numeric.", E_USER_ERROR);
             $this->_logError->logError(__LINE__ . " " . __FILE__ .
@@ -531,21 +531,21 @@ class DAOLive implements DAO {
         $TabBufferAllRate;
 
         if (isset($Arraydecoded)) {
-            foreach ($Arraydecoded['live'] as $i => $decoded) {
-                $buffRate->set_id($decoded["rate"]["id"]);
-                $buffRate->set_type($decoded["rate"]["type"]);
-                $buffRate->set_recurrence($decoded["rate"]["recurrence"]);
-                $buffRate->set_price($decoded["rate"]["price"]);
-                $buffRate->set_beginDate($decoded["rate"]["beginDate"]);
-                $buffRate->set_endDate($decoded["rate"]["endDate"]);
-                $buffRate->set_currency($decoded["rate"]["currency"]);
-                $buffRate->set_active($decoded["rate"]["active"]);
-                $buffRate->set_channel_id($decoded["rate"]["channel_id"]);
-                $buffRate->set_channels_package_id($decoded["rate"]["channels_package_id"]);
-                $buffRate->set_time_quantity($decoded["rate"]["time_quantity"]);
-                $buffRate->set_time_unit($decoded["rate"]["time_unit"]);
-                $buffRate->set_multiply_by_quantity($decoded["rate"]["multiply_by_quantity"]);
-                $buffRate->set_start_method($decoded["rate"]["start_method"]);
+            foreach ($Arraydecoded['rate'] as $i => $decoded) {
+                $buffRate->set_id($decoded["id"]);
+                $buffRate->set_type($decoded["type"]);
+                $buffRate->set_recurrence($decoded["recurrence"]);
+                $buffRate->set_price($decoded["price"]);
+                $buffRate->set_beginDate($decoded["beginDate"]);
+                $buffRate->set_endDate($decoded["endDate"]);
+                $buffRate->set_currency($decoded["currency"]);
+                $buffRate->set_active($decoded["active"]);
+                $buffRate->set_channel_id($decoded["channel_id"]);
+                $buffRate->set_channels_package_id($decoded["channels_package_id"]);
+                $buffRate->set_time_quantity($decoded["time_quantity"]);
+                $buffRate->set_time_unit($decoded["time_unit"]);
+                $buffRate->set_multiply_by_quantity($decoded["multiply_by_quantity"]);
+                $buffRate->set_start_method($decoded["start_method"]);
                 $TabBufferAllRate[$i] = $buffRate;
             }
             $this->_currentLive->reset_AllRate();

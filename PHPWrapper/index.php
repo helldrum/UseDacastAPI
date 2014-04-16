@@ -63,14 +63,17 @@ try {
     //     echo $live;
     // }
     //get rate 12075 from live 12075
-   // $rate = $liveDao->getRatebyId(34808, 12075);
-   // echo $rate;
-    
+    // $rate = $liveDao->getRatebyId(34808, 12075);
+    // echo $rate;
     //$message = $liveDao->deleteById(34808, 12075);
     //echo $message;
     //Element #34808 of type live has been deleted 
-    
-    
+
+    $tabAllRate = $liveDao->getAllRatebyId(34808);
+   
+    foreach ($tabAllRate as $rate ) {
+        echo $rate."<br>" ;
+    }
 } catch (Exception $e) {
     echo $e->getMessage();
 }

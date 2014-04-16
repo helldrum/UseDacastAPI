@@ -155,7 +155,7 @@ class Rate {
 
     public function __toString() {
 
-        $toString = "rate_id $this->_id<br>
+        $toString = "rate_id =  $this->_id<br>
     type = $this->_type<br>
     recurrence = $this->_recurrence<br>
     price = $this->_price<br>
