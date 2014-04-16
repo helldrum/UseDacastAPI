@@ -73,25 +73,33 @@ class DAOLive implements DAO {
     }
 
     public function getById($live_id) {
+        $functionReturn = null;
+        $inputCorrect = $this->testgetByIdFunctionInput($live_id);
+        if ($inputCorrect) {
+            $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                    "?bid=" . $this->_userSettings->getBroadcasterID() .
+                    "&apikey=" . $this->_userSettings->getApiKey();
 
+            $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+            $this->_APICall->ApiRequest("GET", $this->_fullUrlCall);
+
+            $decoded = $this->_APICall->getJsonDecoded();
+            $message = $this->convertDecodedJsonToLive($decoded);
+
+            if (isset($message)) {
+                $functionReturn = $message;
+            } else {
+                $functionReturn = $this->_currentLive;
+            }
+            return $functionReturn;
+        }
+    }
+
+    private function testgetByIdFunctionInput($live_id) {
+        $inputCorrect = false;
         if (is_numeric($live_id)) {
             if ($live_id != 0) {
-
-                $this->_fullUrlCall = self::API_URL . "/" . $live_id .
-                        "?bid=" . $this->_userSettings->getBroadcasterID() .
-                        "&apikey=" . $this->_userSettings->getApiKey();
-
-                $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
-                $this->_APICall->ApiRequest("GET", $this->_fullUrlCall);
-
-                $decoded = $this->_APICall->getJsonDecoded();
-
-                $message = $this->convertDecodedJsonToLive($decoded);
-                if (isset($message)) {
-                    return $message;
-                } else {
-                    return $this->_currentLive;
-                }
+                $inputCorrect = true;
             } else {
 
                 trigger_error("live_id = 0 use the function getAllLive instead.", E_USER_ERROR);
@@ -100,6 +108,7 @@ class DAOLive implements DAO {
             trigger_error("live_id is not numeric.", E_USER_ERROR);
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id . " " . $e->getMessage());
         }
+        return $inputCorrect;
     }
 
     private function convertDecodedJsonToLive($decoded) {
@@ -153,6 +162,7 @@ class DAOLive implements DAO {
     }
 
     public function get_all() {
+        $functionReturn = null;
         $this->_fullUrlCall = self::API_URL . "/" .
                 "0?bid=" . $this->_userSettings->getBroadcasterID() .
                 "&apikey=" . $this->_userSettings->getApiKey();
@@ -161,18 +171,16 @@ class DAOLive implements DAO {
 
         $decoded = $this->_APICall->getJsonDecoded();
 
-        $error = $this->convertDecodedJsonToArrayAllLive($decoded);
-
-        if (isset($error)) {
-            return $error;
-        }
+        $this->convertDecodedJsonToArrayAllLive($decoded);
 
         if (isset($decoded['error']['message'])) {
             $message = "Error :  " . $decoded['error']['message'];
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
-            return $message;
+            $functionReturn = $message;
+        } else {
+            $functionReturn = $this->_tabAllLive;
         }
-        return $this->_tabAllLive;
+        return $functionReturn;
     }
 
     private function convertDecodedJsonToArrayAllLive($Arraydecoded) {
@@ -225,43 +233,45 @@ class DAOLive implements DAO {
             }
             $this->reset_tabAllLive();
             $this->_tabAllLive = $tabBuffLive;
-        } else {
-            $message = "Error :  no way to decode all Live json.";
-            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  no way to decode All Live json." . print_r($decoded["live"], true) . " " . $e->getMessage());
-            return $message;
         }
     }
 
     public function deleteById($live_id) {
+        $this->testDeleteByIdInput($live_id);
+        $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                "?bid=" . $this->_userSettings->getBroadcasterID() .
+                "&apikey=" . $this->_userSettings->getApiKey();
 
+
+        $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+        $this->_APICall->ApiRequest("DELETE", $this->_fullUrlCall);
+
+        $decoded = $this->_APICall->getJsonDecoded();
+
+        if (isset($decoded['error']['message'])) {
+            $message = "Error :  " . $decoded['error']['message'];
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
+        } else {
+            $message = $decoded['message'];
+        }
+
+        return $message;
+    }
+
+    private function testDeleteByIdInput($live_id) {
+        $inputCorrect = false;
         if (is_numeric($live_id)) {
-            $this->_fullUrlCall = self::API_URL . "/" . $live_id .
-                    "?bid=" . $this->_userSettings->getBroadcasterID() .
-                    "&apikey=" . $this->_userSettings->getApiKey();
-
-
-            $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
-            $this->_APICall->ApiRequest("DELETE", $this->_fullUrlCall);
-
-            $decoded = $this->_APICall->getJsonDecoded();
-
-            if (isset($decoded['error']['message'])) {
-                $message = "Error :  " . $decoded['error']['message'];
-                $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
-            } else {
-                $message = $decoded['message'];
-            }
-
-            return $message;
+            $inputCorrect = true;
         } else {
             trigger_error("live_id is not numeric.", E_USER_ERROR);
         }
+        return $inputCorrect;
     }
 
     public function create($live) {
-
-        if ($live instanceof Live) {
-
+        $functionReturn = null;
+        $inputCorrect = $this->testCreateInput($live);
+        if ($inputCorrect) {
             $this->setCreateLiveURL(0, $live);
 
             $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
@@ -274,15 +284,23 @@ class DAOLive implements DAO {
             if (isset($decoded['error']['message'])) {
                 $message = "Error :  " . $decoded['error']['message'];
                 $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
-                return $message;
+                $functionReturn = $message;
+            } else {
+                $functionReturn = $this->_currentLive;
             }
+            return $functionReturn;
+        }
+    }
 
-
-            return $this->_currentLive;
+    private function testCreateInput($live) {
+        $inputCorrect = false;
+        if ($live instanceof Live) {
+            $inputCorrect = true;
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live parameter is not a live object");
             trigger_error("live parameter is not a live object.", E_USER_ERROR);
         }
+        return $inputCorrect;
     }
 
     private function setCreateLiveURL($live_id, $live) {
@@ -333,22 +351,32 @@ class DAOLive implements DAO {
     }
 
     public function getEmbedCode($live_id, $type) {
+
+        $inputCorrect = $this->testEmbedCodeFunctionInput($live_id, $type);
+        if ($inputCorrect) {
+
+            $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                    "/embed/" . $type . "?bid=" . $this->_userSettings->getBroadcasterID() .
+                    "&apikey=" . $this->_userSettings->getApiKey();
+
+            $this->_APICall->ApiRequestWithRawData($this->_fullUrlCall);
+
+            $decoded = $this->_APICall->getJsonDecoded();
+
+            if (isset($decoded['error']['message'])) {
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . $decoded['error']['message']);
+                $message = "Error :  " . $decoded['error']['message'];
+                return $message;
+            }
+            return $decoded;
+        }
+    }
+
+    private function testEmbedCodeFunctionInput($live_id, $type) {
+        $inputCorrect = false;
         if ($type == 'js' || $type == 'frame') {
             if (is_numeric($live_id)) {
-                $this->_fullUrlCall = self::API_URL . "/" . $live_id .
-                        "/embed/" . $type . "?bid=" . $this->_userSettings->getBroadcasterID() .
-                        "&apikey=" . $this->_userSettings->getApiKey();
-
-                $this->_APICall->ApiRequestWithRawData($this->_fullUrlCall);
-
-                $decoded = $this->_APICall->getJsonDecoded();
-
-                if (isset($decoded['error']['message'])) {
-                    $this->_logError->logError(__LINE__ . " " . __FILE__ . $decoded['error']['message']);
-                    $message = "Error :  " . $decoded['error']['message'];
-                    return $message;
-                }
-                return $decoded;
+                $inputCorrect = true;
             } else {
                 $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric " . $live_id);
                 trigger_error("live_id is not numeric.", E_USER_ERROR);
@@ -357,35 +385,49 @@ class DAOLive implements DAO {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "Unknown type of embed code." . $type);
             trigger_error("Unknown type of embed code.", E_USER_ERROR);
         }
+
+        return $inputCorrect;
     }
 
     public function createRateById($live_id, $rate) {
         throw new Exception('pending function due to currency issues');
+        $functionReturn = null;
+        $inputCorrect = $this->testCreateRatebyIdInput($live_id, $rate);
+        if ($inputCorrect) {
+            $this->setURLcreateRate($live_id, $rate);
+            $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+            $this->_APICall->ApiRequest("POST", $this->_fullUrlCall);
 
+            $decoded = $this->_APICall->getJsonDecoded();
+            $this->convertDecodedJsonToRate($decoded);
+
+            if (isset($decoded['error']['message'])) {
+                $message = "Error :  " . $decoded['error']['message'];
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
+                $functionReturn = $message;
+            } else {
+                $functionReturn = $this->_currentLive->get_currentRate();
+            }
+        }
+        return $functionReturn;
+    }
+
+    private function testCreateRatebyIdInput($live_id, $rate) {
+        $inputCorrect = false;
         if (is_numeric($live_id)) {
             if ($live_id != 0) {
                 if ($rate instanceof Rate) {
-                    $this->setURLcreateRate($live_id, $rate);
-                    $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
-                    $this->_APICall->ApiRequest("POST", $this->_fullUrlCall);
-
-                    $decoded = $this->_APICall->getJsonDecoded();
-                    $this->convertDecodedJsonToRate($decoded);
-
-                    if (isset($decoded['error']['message'])) {
-                        $message = "Error :  " . $decoded['error']['message'];
-                        $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
-                        return $message;
-                    }
-                    return $this->_currentLive->get_currentRate();
+                    $inputCorrect = true;
                 } else {
                     trigger_error("Parameter rate is not a instance of Rate.", E_USER_ERROR);
                 }
             } else {
                 trigger_error("Parameter live_id can be set to 0.", E_USER_ERROR);
             }
+        } else {
+            trigger_error("Parameter live_id is not numeric.", E_USER_ERROR);
         }
-        trigger_error("Parameter live_id is not numeric.", E_USER_ERROR);
+        return $inputCorrect;
     }
 
     private function setURLcreateRate($live_id, $rate) {
@@ -421,35 +463,41 @@ class DAOLive implements DAO {
     }
 
     public function getRatebyId($live_id, $rate_id) {
+        $functionReturn = null;
+        $inputCorrect = $this->testGetRateByIdInput($live_id, $rate_id);
+        if ($inputCorrect) {
+            $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                    "/rate/" . $rate_id .
+                    "?bid=" . $this->_userSettings->getBroadcasterID() .
+                    "&apikey=" . $this->_userSettings->getApiKey();
 
+            $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+            $this->_APICall->ApiRequest("GET", $this->_fullUrlCall);
+
+            $decoded = $this->_APICall->getJsonDecoded();
+
+            $this->convertDecodedJsonToRate($decoded);
+
+            if (isset($decoded['error']['message'])) {
+                $message = "Error :  " . $decoded['error']['message'];
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
+
+                $functionReturn = $message;
+            } else {
+
+                $functionReturn = $this->_currentLive->get_currentRate();
+            }
+            return $functionReturn;
+        }
+    }
+
+    private function testGetRateByIdInput($live_id, $rate_id) {
+        $inputCorrect = false;
         if (is_numeric($live_id)) {
             if ($live_id != 0) {
                 if (is_numeric($rate_id)) {
                     if ($rate_id != 0) {
-
-                        $this->_fullUrlCall = self::API_URL . "/" . $live_id .
-                                "/rate/" . $rate_id .
-                                "?bid=" . $this->_userSettings->getBroadcasterID() .
-                                "&apikey=" . $this->_userSettings->getApiKey();
-
-                        $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
-                        $this->_APICall->ApiRequest("GET", $this->_fullUrlCall);
-
-                        $decoded = $this->_APICall->getJsonDecoded();
-
-                        $message = $this->convertDecodedJsonToRate($decoded);
-
-                        if (isset($message)) {
-                            return $message;
-                        }
-                        if (isset($decoded['error']['message'])) {
-                            $message = "Error :  " . $decoded['error']['message'];
-                            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
-
-                            return $message;
-                        }
-
-                        return $this->_currentLive->get_currentRate();
+                        $inputCorrect = true;
                     } else {
                         $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id = 0 use the function getAllRate instead.");
                         trigger_error("rate_id = 0 use the function getAllRate instead.", E_USER_ERROR);
@@ -466,6 +514,7 @@ class DAOLive implements DAO {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id);
             trigger_error("live_id is not numeric.", E_USER_ERROR);
         }
+        return $inputCorrect;
     }
 
     private function convertDecodedJsonToRate($decoded) {
@@ -487,9 +536,6 @@ class DAOLive implements DAO {
             $buffRate->set_start_method($decoded["rate"]["start_method"]);
 
             return $this->_currentLive->set_currentRate($buffRate);
-        } else {
-            $this->_logError->logInfo(__LINE__ . " " . __FILE__ . "Empty Rate result.");
-            return "Empty Rate result";
         }
     }
 
@@ -498,8 +544,8 @@ class DAOLive implements DAO {
         if (is_numeric($live_id)) {
 
             $this->_fullUrlCall = self::API_URL . "/" . $live_id .
-                    "/rate/" . $rate_id .
-                    "?bid=" . $this->_userSettings->getBroadcasterID() .
+                    "/rate/" .
+                    "0?bid=" . $this->_userSettings->getBroadcasterID() .
                     "&apikey=" . $this->_userSettings->getApiKey();
 
             $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
@@ -592,35 +638,40 @@ class DAOLive implements DAO {
     }
 
     public function getCouponbyId($live_id, $coupon_id) {
-   
+        throw new Exception('pending function wrong return');
+        $inputCorrect = $this->testgetCouponbyIdInput($live_id, $coupon_id);
+        if ($inputCorrect) {
+            $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                    "/coupon/" . $coupon_id .
+                    "?bid=" . $this->_userSettings->getBroadcasterID() .
+                    "&apikey=" . $this->_userSettings->getApiKey();
+
+            $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+            $this->_APICall->ApiRequest("GET", $this->_fullUrlCall);
+
+            $decoded = $this->_APICall->getJsonDecoded();
+
+            $this->convertDecodedJsonToCoupon($decoded);
+
+
+            if (isset($decoded['error']['message'])) {
+                $message = "Error :  " . $decoded['error']['message'];
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
+
+                return $message;
+            }
+
+            return $this->_currentLive->get_currentCoupon();
+        }
+    }
+
+    private function testgetCouponbyIdInput($live_id, $coupon_id) {
+        $inputCorrect = false;
         if (is_numeric($live_id)) {
             if ($live_id != 0) {
                 if (is_numeric($coupon_id)) {
                     if ($coupon_id != 0) {
-
-                        $this->_fullUrlCall = self::API_URL . "/" . $live_id .
-                                "/coupon/" . $coupon_id .
-                                "?bid=" . $this->_userSettings->getBroadcasterID() .
-                                "&apikey=" . $this->_userSettings->getApiKey();
-
-                        $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
-                        $this->_APICall->ApiRequest("GET", $this->_fullUrlCall);
-
-                        $decoded = $this->_APICall->getJsonDecoded();
-
-                        $message = $this->convertDecodedJsonToCoupon($decoded);
-
-                        if (isset($message)) {
-                            return $message;
-                        }
-                        if (isset($decoded['error']['message'])) {
-                            $message = "Error :  " . $decoded['error']['message'];
-                            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
-
-                            return $message;
-                        }
-
-                        return $this->_currentLive->get_currentCoupon();
+                        $inputCorrect = true;
                     } else {
                         $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id = 0 use the function getAllCoupon instead.");
                         trigger_error("coupon_id = 0 use the function getAllCoupon instead.", E_USER_ERROR);
@@ -637,6 +688,7 @@ class DAOLive implements DAO {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id);
             trigger_error("live_id is not numeric.", E_USER_ERROR);
         }
+        return $inputCorrect;
     }
 
     private function convertDecodedJsonToCoupon($decoded) {
@@ -657,14 +709,72 @@ class DAOLive implements DAO {
             $buffCoupon->set_user_id($decoded["coupon"]["user_id"]);
 
             return $this->_currentLive->set_currentCoupon($buffCoupon);
-        } else {
-            $this->_logError->logInfo(__LINE__ . " " . __FILE__ . "Empty Coupon result.");
-            return "Empty Coupon result";
         }
     }
 
     public function createCouponById($live_id, $coupon) {
-        trigger_error("not yet implemented.", E_USER_ERROR);
+        $functionReturn = null;
+        $inputCorrect = $this->testCreateCouponByIdInput($live_id, $coupon);
+        if ($inputCorrect) {
+            $this->setURLcreateCoupon($live_id, $coupon);
+
+            $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
+            $this->_APICall->ApiRequest("POST", $this->_fullUrlCall);
+
+            $decoded = $this->_APICall->getJsonDecoded();
+            $this->convertDecodedJsonToCoupon($decoded);
+
+            if (isset($decoded['error']['message'])) {
+                $message = "Error :  " . $decoded['error']['message'];
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
+                $functionReturn = $message;
+            } else {
+                $functionReturn = $this->_currentLive->get_currentCoupon();
+            }
+            return $functionReturn;
+        }
+    }
+
+    private function testCreateCouponByIdInput($live_id, $coupon) {
+        $inputCorrect = false;
+        if (is_numeric($live_id)) {
+            if ($live_id != 0) {
+                if ($coupon instanceof Coupon) {
+                    $inputCorrect = true;
+                } else {
+                    trigger_error("Parameter rate is not a instance of Rate.", E_USER_ERROR);
+                }
+            } else {
+                trigger_error("Parameter live_id can be set to 0.", E_USER_ERROR);
+            }
+        } else {
+            trigger_error("Parameter live_id is not numeric.", E_USER_ERROR);
+        }
+        return $inputCorrect;
+    }
+
+    private function setURLcreateCoupon($live_id, $coupon) {
+        $this->_fullUrlCall = self::API_URL . "/" . $live_id .
+                "/coupon/0?bid=" . $this->_userSettings->getBroadcasterID() .
+                "&apikey=" . $this->_userSettings->getApiKey();
+        if (($coupon->get_code()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&code=" . urlencode($coupon->get_code());
+        }
+        if (($coupon->get_type()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&type=" . urlencode($coupon->get_type());
+        }
+        if (($coupon->get_rate_type()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&rate_type=" . urlencode($coupon->get_rate_type());
+        }
+        if (($coupon->get_value()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "&value=" . urlencode($coupon->get_value());
+        }
+        if (($coupon->get_currency()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "¤cy=" . urlencode($coupon->get_currency());
+        }
+        if (($coupon->get_max()) != null) {
+            $this->_fullUrlCall = $this->_fullUrlCall . "max=" . urlencode($coupon->get_max());
+        }
     }
 
     public function deleteCouponbyId($live_id, $coupon_id) {
