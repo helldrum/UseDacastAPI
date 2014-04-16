@@ -32,11 +32,19 @@ interface DAO {
 
     public function getEmbedCode($id, $type);
 
-    public function getRatebyId($live_id, $rate_id);
+    public function getRatebyId($object_id, $rate_id);
 
-    public function getAllRatebyId($live_id);
+    public function getAllRatebyId($object_id);
 
-    public function createRateById($live_id, $rate);
+    public function createRateById($object_id, $rate);
 
-    public function deleteRatebyId($live_id, $rate_id);
+    public function deleteRatebyId($object_id, $rate_id);
+    
+        public function getCouponbyId($object_id, $coupon_id);
+
+    public function getAllCouponbyId($object_id);
+
+    public function createCouponById($object_id, $rate);
+
+    public function deleteCouponbyId($object_id, $rate_id);
 }

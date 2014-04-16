@@ -19,7 +19,7 @@ class DAOLive implements DAO {
     private $_logError;
 
     function __construct($userSettings, $live) {
-        $this->_logError = new KLogger("error.log", KLogger::ERR);
+        $this->_logError = new KLogger("/var/log/error", KLogger::ERR);
         if (isset($live)) {
 
             $this->_currentLive = $live;
@@ -593,6 +593,22 @@ class DAOLive implements DAO {
         } else {
             trigger_error("live_id is not numeric.", E_USER_ERROR);
         }
+    }
+
+    public function createCouponById($object_id, $rate) {
+        trigger_error("not yet implemented.", E_USER_ERROR);
+    }
+
+    public function deleteCouponbyId($object_id, $rate_id) {
+        trigger_error("not yet implemented.", E_USER_ERROR);
+    }
+
+    public function getAllCouponbyId($object_id) {
+        trigger_error("not yet implemented.", E_USER_ERROR);
+    }
+
+    public function getCouponbyId($object_id, $coupon_id) {
+        trigger_error("not yet implemented.", E_USER_ERROR);
     }
 
 }

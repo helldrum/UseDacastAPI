@@ -18,8 +18,8 @@ class APICall {
     private $_logError;
 
     function __construct($_apiKey, $_broadcasterId, $_url) {
-        $this->_log = new KLogger("callApi.log", KLogger::INFO);
-        $this->_logError = new KLogger("error.log", KLogger::ERR);
+        $this->_log = new KLogger("/var/log/APICall", KLogger::INFO);
+        $this->_logError = new KLogger("/var/log/error", KLogger::ERR);
         $this->_apiKey = $_apiKey;
         $this->_broadcasterId = $_broadcasterId;
         $this->_url = $_url;
