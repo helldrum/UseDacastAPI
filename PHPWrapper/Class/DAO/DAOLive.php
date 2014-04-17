@@ -31,7 +31,7 @@ class DAOLive implements DAO {
             $this->_userSettings = $userSettings;
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "UserSetting miss initialized in DAOLive contructor" . print_r($userSettings, true) . $e->getMessage());
-            trigger_error("userSetting miss initialized in DAOLive contructor.", E_WARNING);
+            trigger_error("userSetting miss initialized in DAOLive contructor.", E_USER_WARNING);
         }
     }
 
@@ -64,7 +64,7 @@ class DAOLive implements DAO {
             $this->_currentLive = $live;
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  objet is not instance of Live." . print_r($decoded["live"], true) . " " . $e->getMessage());
-            trigger_error("Objet is not instance of Live.", E_WARNING);
+            trigger_error("Objet is not instance of Live.", E_USER_WARNING);
         }
     }
 
@@ -104,10 +104,10 @@ class DAOLive implements DAO {
                 $inputCorrect = true;
             } else {
 
-                trigger_error("live_id = 0 use the function getAllLive instead.", E_WARNING);
+                trigger_error("live_id = 0 use the function getAllLive instead.", E_USER_WARNING);
             }
         } else {
-            trigger_error("live_id is not numeric.", E_WARNING);
+            trigger_error("live_id is not numeric.", E_USER_WARNING);
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id . " " . $e->getMessage());
         }
         return $inputCorrect;
@@ -263,7 +263,7 @@ class DAOLive implements DAO {
         if (is_numeric($live_id)) {
             $inputCorrect = true;
         } else {
-            trigger_error("live_id is not numeric.", E_WARNING);
+            trigger_error("live_id is not numeric.", E_USER_WARNING);
         }
         return $inputCorrect;
     }
@@ -298,7 +298,7 @@ class DAOLive implements DAO {
             $inputCorrect = true;
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live parameter is not a live object");
-            trigger_error("live parameter is not a live object.", E_WARNING);
+            trigger_error("live parameter is not a live object.", E_USER_WARNING);
         }
         return $inputCorrect;
     }
@@ -379,11 +379,11 @@ class DAOLive implements DAO {
                 $inputCorrect = true;
             } else {
                 $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric " . $live_id);
-                trigger_error("live_id is not numeric.", E_WARNING);
+                trigger_error("live_id is not numeric.", E_USER_WARNING);
             }
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "Unknown type of embed code." . $type);
-            trigger_error("Unknown type of embed code.", E_WARNING);
+            trigger_error("Unknown type of embed code.", E_USER_WARNING);
         }
 
         return $inputCorrect;
@@ -419,13 +419,13 @@ class DAOLive implements DAO {
                 if ($rate instanceof Rate) {
                     $inputCorrect = true;
                 } else {
-                    trigger_error("Parameter rate is not a instance of Rate.", E_WARNING);
+                    trigger_error("Parameter rate is not a instance of Rate.", E_USER_WARNING);
                 }
             } else {
-                trigger_error("Parameter live_id can be set to 0.", E_WARNING);
+                trigger_error("Parameter live_id can be set to 0.", E_USER_WARNING);
             }
         } else {
-            trigger_error("Parameter live_id is not numeric.", E_WARNING);
+            trigger_error("Parameter live_id is not numeric.", E_USER_WARNING);
         }
         return $inputCorrect;
     }
@@ -500,19 +500,19 @@ class DAOLive implements DAO {
                         $inputCorrect = true;
                     } else {
                         $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id = 0 use the function getAllRate instead.");
-                        trigger_error("rate_id = 0 use the function getAllRate instead.", E_WARNING);
+                        trigger_error("rate_id = 0 use the function getAllRate instead.", E_USER_WARNING);
                     }
                 } else {
                     $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id is not numeric.");
-                    trigger_error("rate_id is not numeric.", E_WARNING);
+                    trigger_error("rate_id is not numeric.", E_USER_WARNING);
                 }
             } else {
                 $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id = 0 use the function getAllRate instead.");
-                trigger_error("live_id can't be set to 0.", E_WARNING);
+                trigger_error("live_id can't be set to 0.", E_USER_WARNING);
             }
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id);
-            trigger_error("live_id is not numeric.", E_WARNING);
+            trigger_error("live_id is not numeric.", E_USER_WARNING);
         }
         return $inputCorrect;
     }
@@ -562,7 +562,7 @@ class DAOLive implements DAO {
             }
             return $this->_currentLive->get_TabAllRate();
         } else {
-            trigger_error("live_id is not numeric.", E_WARNING);
+            trigger_error("live_id is not numeric.", E_USER_WARNING);
             $this->_logError->logError(__LINE__ . " " . __FILE__ .
                     "live_id is not numeric.");
         }
@@ -593,7 +593,7 @@ class DAOLive implements DAO {
             $this->_currentLive->set_TabAllRate($TabBufferAllRate);
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "Empty Rate result.");
-            trigger_error("Empty Rate result.", E_WARNING);
+            trigger_error("Empty Rate result.", E_USER_WARNING);
         }
     }
 
@@ -630,16 +630,16 @@ class DAOLive implements DAO {
                     if ($rate_id != 0) {
                         $inputCorrect = true;
                     } else {
-                        trigger_error("rate_id is not numeric.", E_WARNING);
+                        trigger_error("rate_id is not numeric.", E_USER_WARNING);
                     }
                 } else {
-                    trigger_error("Parameter rate_id can be set to 0.", E_WARNING);
+                    trigger_error("Parameter rate_id can be set to 0.", E_USER_WARNING);
                 }
             } else {
-                trigger_error("Parameter live_id can be set to 0.", E_WARNING);
+                trigger_error("Parameter live_id can be set to 0.", E_USER_WARNING);
             }
         } else {
-            trigger_error("live_id is not numeric.", E_WARNING);
+            trigger_error("live_id is not numeric.", E_USER_WARNING);
         }
         return $inputCorrect;
     }
@@ -681,19 +681,19 @@ class DAOLive implements DAO {
                         $inputCorrect = true;
                     } else {
                         $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id = 0 use the function getAllCoupon instead.");
-                        trigger_error("coupon_id = 0 use the function getAllCoupon instead.", E_WARNING);
+                        trigger_error("coupon_id = 0 use the function getAllCoupon instead.", E_USER_WARNING);
                     }
                 } else {
                     $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id is not numeric.");
-                    trigger_error("coupon_id is not numeric.", E_WARNING);
+                    trigger_error("coupon_id is not numeric.", E_USER_WARNING);
                 }
             } else {
                 $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id = 0 use the function getAllCoupon instead.");
-                trigger_error("live_id = 0 use the function getAllCoupon instead.", E_WARNING);
+                trigger_error("live_id = 0 use the function getAllCoupon instead.", E_USER_WARNING);
             }
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id);
-            trigger_error("live_id is not numeric.", E_WARNING);
+            trigger_error("live_id is not numeric.", E_USER_WARNING);
         }
         return $inputCorrect;
     }
@@ -749,13 +749,13 @@ class DAOLive implements DAO {
                 if ($coupon instanceof Coupon) {
                     $inputCorrect = true;
                 } else {
-                    trigger_error("Parameter rate is not a instance of Rate.", E_WARNING);
+                    trigger_error("Parameter rate is not a instance of Rate.", E_USER_WARNING);
                 }
             } else {
-                trigger_error("Parameter live_id can be set to 0.", E_WARNING);
+                trigger_error("Parameter live_id can be set to 0.", E_USER_WARNING);
             }
         } else {
-            trigger_error("Parameter live_id is not numeric.", E_WARNING);
+            trigger_error("Parameter live_id is not numeric.", E_USER_WARNING);
         }
         return $inputCorrect;
     }
@@ -818,25 +818,25 @@ class DAOLive implements DAO {
                         $inputCorrect = true;
                     } else {
                         $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id = 0 use the function getAllCoupon instead.");
-                        trigger_error("coupon_id = 0 use the function getAllCoupon instead.", E_WARNING);
+                        trigger_error("coupon_id = 0 use the function getAllCoupon instead.", E_USER_WARNING);
                     }
                 } else {
                     $this->_logError->logError(__LINE__ . " " . __FILE__ . "rate_id is not numeric.");
-                    trigger_error("coupon_id is not numeric.", E_WARNING);
+                    trigger_error("coupon_id is not numeric.", E_USER_WARNING);
                 }
             } else {
                 $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id = 0 use the function getAllCoupon instead.");
-                trigger_error("live_id = 0 use the function getAllCoupon instead.", E_WARNING);
+                trigger_error("live_id = 0 use the function getAllCoupon instead.", E_USER_WARNING);
             }
         } else {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . "live_id is not numeric. " . $live_id);
-            trigger_error("live_id is not numeric.", E_WARNING);
+            trigger_error("live_id is not numeric.", E_USER_WARNING);
         }
         return $inputCorrect;
     }
 
     public function getAllCouponbyId($live_id) {
-        trigger_error("not yet implemented.", E_WARNING);
+        trigger_error("not yet implemented.", E_USER_WARNING);
     }
 
 }

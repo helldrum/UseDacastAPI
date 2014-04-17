@@ -97,14 +97,14 @@ try {
     //Element #34808 of type live has been deleted 
 
 //    $tabAllRate = $liveDao->getAllRatebyId(34808);
-//   
+   
 //    foreach ($tabAllRate as $rate ) {
 //        echo $rate."<br>" ;
 //    }
     
 //   echo $liveDao->getCouponbyId(35717, 13782);
    
-   echo $liveDao->deleteCouponbyId(35717, 13782);
+//   echo $liveDao->deleteCouponbyId(35717, 13782);
     
 } catch (Exception $e) {
     echo $e->getMessage();

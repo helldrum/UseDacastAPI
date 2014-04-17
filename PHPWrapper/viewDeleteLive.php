@@ -1,7 +1,3 @@
-
-
-
-
 <?php
 include_once ($pre . "globalfunction.php");
 
