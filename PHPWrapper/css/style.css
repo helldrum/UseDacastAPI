@@ -1,0 +1,80 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Apr 16, 2014, 5:28:49 PM
+    Author     : User
+*/
+
+
+h1{
+    width: 636px; 
+}
+.displayInfo{
+
+    width: 636px;
+
+}
+
+.displayInfo li {
+    list-style: none;
+}
+
+
+.withButton {
+    margin-top: 10px;
+}
+
+.displayInfo button {
+    bottom: 20px;
+    display: block;
+    left: 113px;
+    margin-left: 35px;
+    position: relative;
+}
+body{
+
+    background: linear-gradient(bottom, #53B8D1, #FCFCFE 90%) rgba(0, 0, 0, 0);
+}
+img {
+    margin-top: 20px;
+}
+
+
+
+[data-tip]{
+    position: relative;
+}
+
+[data-tip]:hover:before{
+    content: attr(data-tip);
+    position: absolute;
+    padding: 0 8px;
+    height: 28px;
+    line-height: 28px;
+    background-color: rgba(0, 0, 0, 0.8);
+    top: -38px;
+    font-size: 14px;
+    border-radius: 3px;
+    white-space: nowrap;
+    color: #fff;
+    font-size: 11px;
+}
+
+[data-tip]:hover:after {
+    content: "";
+    position: absolute;
+    border-top: 8px solid rgba(0, 0, 0, 0.8);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    top: -10px;
+}
+
+h1 {
+    color: #FFFFFF;
+    font-size: xx-large;
+}
+
+

@@ -39,50 +39,68 @@ try {
             <title>Display live</title>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width">
-            <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-            <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-            <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+            <link rel="stylesheet" href="./css/bootstrap.min.css">
+            <link rel="stylesheet" href="./css/bootstrap-theme.min.css">
             <link rel="stylesheet" href="./css/style.css">
-            <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+            <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+            <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script> 
         </head>
         <body>
-            <div class="container">
-                <h1 class="container displayInfo"> <?php echo $live43364->getTitle(); ?></h1>
+            <script>
+                jQuery(function($) {
+                    $('span').popover({
+                        trigger: 'hover focus'
+                    });
 
-                <div class="container player" style="height:<?php echo $live43364->getPlayer_height(); ?>px; width:<?php echo $live43364->getPlayer_width(); ?>px; " >
+                    $('div').popover({
+                        trigger: 'hover focus'
+                    });
+                });
+
+            </script>
+
+            <div class="container">
+                <img src="http://www.dacast.com/images/logo_blue.png" alt="dacast logo">
+                <h1 class="container displayInfo"><span data-container="body" data-toggle="popover" data-placement="right" data-content="$live->getTitle() function"> <?php echo $live43364->getTitle(); ?></span></h1>
+                <div data-container="body" data-toggle="popover" data-placement="right" data-content="html_entity_decode( $liveDao->getEmbedCode( '{YourLiveID}','js'))" class="container player" style="height:<?php echo $live43364->getPlayer_height(); ?>px; width:<?php echo $live43364->getPlayer_width(); ?>px; " >
                     <?php echo $playerLive43364; ?>
+                    </span>
                 </div>
-                <div class="container displayInfo">
+                <div class=" container displayInfo"  ><pre class='text-info'>The div container can be dynamicly resize if you get the height and width of the player with the function $live->getPlayer_height() and $live->getPlayer_width()</pre></div>
+
+                <div class="container displayInfo" >
+                    
+                    <span data-container="pre" data-toggle="popover" data-placement="right" data-content="$live->getDescription() function"><h2>Description:</h2><pre><?php echo $live43364->getDescription(); ?></pre></span>
+
                     <ul>
 
-                        <li> <h2>Description:</h2> <p><?php echo $live43364->getDescription(); ?></p></li>
                         <div class="withButton">
-                            <li><strong>Online: </strong><?php echo getButton($live43364->getOnline()); ?></li> 
-                            <li><strong>AutoPlay: </strong><?php echo getButton($live43364->getAutoplay()); ?></li>
-                            <li><strong>Enable ADS: </strong><?php echo getButton($live43364->getEnable_ads()); ?></li>
-                            <li><strong>Enable subscription: </strong><?php echo getButton($live43364->getEnable_subscription()); ?></li>
-                            <li><strong>Enable PayPerView: </strong><?php echo getButton($live43364->getEnable_payperview()); ?></li>
-                            <li><strong>Enable Coupon: </strong><?php echo getButton($live43364->getEnable_coupon()); ?></il>
-                            <li><strong>Is Private: </strong><?php echo getButton($live43364->getIs_private()); ?></li>
-                            <li><strong>Publish on dacast: </strong><?php echo getButton($live43364->getPublish_on_dacast()); ?></li>
+                            <li><span data-container="body" data-toggle="popover" data-placement="right" data-content="$live->getOnline() function"><strong>Online: </strong><?php echo getButton($live43364->getOnline()); ?></span></li> 
+                            <li><span data-container="body" data-toggle="popover" data-placement="right" data-content="$live->getAutoplay() function"><strong>AutoPlay: </strong><?php echo getButton($live43364->getAutoplay()); ?></span></li>
+                            <li><span data-container="body" data-toggle="popover" data-placement="right" data-content="$live->getEnable_ads() function"><strong>Enable ADS: </strong><?php echo getButton($live43364->getEnable_ads()); ?></span></li>
+                            <li><span data-container="body" data-toggle="popover" data-placement="right" data-content="$live->getEnable_subscription() function"><strong>Enable subscription: </strong><?php echo getButton($live43364->getEnable_subscription()); ?></span></li>
+                            <li><span data-container="body" data-toggle="popover" data-placement="right" data-content="$live->getEnable_payperview() function"><strong>Enable PayPerView: </strong><?php echo getButton($live43364->getEnable_payperview()); ?></span></li>
+                            <li><span data-container="body" data-toggle="popover" data-placement="right" data-content="$live->getEnable_coupon() function"><strong>Enable Coupon: </strong><?php echo getButton($live43364->getEnable_coupon()); ?></span></il>
+                            <li><span data-container="body" data-toggle="popover" data-placement="right" data-content="$live->getIs_private() function"><strong>Is Private: </strong><?php echo getButton($live43364->getIs_private()); ?></span></li>
+                            <li><span data-container="body" data-toggle="popover" data-placement="right" data-content="$live->getPublish_on_dacast() function"><strong>Publish on dacast: </strong><?php echo getButton($live43364->getPublish_on_dacast()); ?></span></li>
                         </div>
                         <?php
                         if (!$live43364->getPublish_on_dacast()) {
-                            echo "<li> <strong>External video page : </strong>" . $live43364->getExternal_video_page() . "<li>";
+                            echo '<li><span data-container="body" data-toggle="popover" data-placement="right" data-content="$live->getExternal_video_page() function"> <strong>External video page : </strong>' . $live43364->getExternal_video_page() . "<li></span>";
                         }
                         ?>
 
-                        <li><strong>BandWidth : </strong><?php echo $live43364->getBandWidth(); ?></li>
-                        <li><strong>Creation Date : </strong><?php echo $live43364->getCreationDate(); ?></li>
-                        <li><strong>Save Date : </strong><?php echo $live43364->getSaveDate(); ?></li>
+                        <li><span data-container="body" data-toggle="popover" data-placement="right" data-content="$live->getBandWidth() function"><strong>BandWidth: </strong><?php echo $live43364->getBandWidth(); ?></span></li>
+                        <li><span data-container="body" data-toggle="popover" data-placement="right" data-content="$live->getCreationDate() function"><strong>Creation Date: </strong><?php echo $live43364->getCreationDate(); ?></span></li>
+                        <li><span data-container="body" data-toggle="popover" data-placement="right" data-content="$live->getSaveDate() function"><strong>Save Date: </strong><?php echo $live43364->getSaveDate(); ?></span></li>
                     </ul>
                 </div>
                 <div class="container displayInfo">
                     <h2>Embed js player code</h2>
-                    <div><code><?php echo $liveEmbedCode43364; ?></code></div>
+                    <div><span data-container="body" data-toggle="popover" data-placement="right" data-content="$liveDao->getEmbedCode( '{YourLiveID}', 'js') function"><pre><?php echo $liveEmbedCode43364; ?></pre></span></div>
 
                     <h2>Embed IFrame player code</h2>
-                    <div><code><?php echo $liveFrameEmbedCode43364; ?></code></div>
+                    <div><span data-container="body" data-toggle="popover" data-placement="right" data-content="$liveDao->getEmbedCode( '{YourLiveID}', 'frame') function"><pre><?php echo $liveFrameEmbedCode43364; ?></pre></span></div>
 
                 </div>
             </div>
