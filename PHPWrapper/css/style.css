@@ -8,7 +8,6 @@ and open the template in the editor.
     Author     : User
 */
 
-
 h1{
     width: 636px; 
 }
@@ -34,10 +33,7 @@ h1{
     margin-left: 35px;
     position: relative;
 }
-body{
 
-    background: linear-gradient(bottom, #53B8D1, #FCFCFE 90%) rgba(0, 0, 0, 0);
-}
 img {
     margin-top: 20px;
 }
@@ -77,4 +73,12 @@ h1 {
     font-size: xx-large;
 }
 
+.formCreate{
+    margin-top: 20px;
+    width: 205px;
 
+}
+html {
+    background-color: #FFFFFF;
+
+}

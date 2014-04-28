@@ -17,7 +17,8 @@ define('API_KEY', '7c70028b237d85cda0cc');
 
 
 try {
-
+define('BID', '26708');
+define('API_KEY', '7c70028b237d85cda0cc');
 
     $userSettings = new UserApiSettings(BID, API_KEY);
     $live = new Live;
@@ -39,9 +40,9 @@ try {
             <title>Display live</title>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width">
-            <link rel="stylesheet" href="./css/bootstrap.min.css">
-            <link rel="stylesheet" href="./css/bootstrap-theme.min.css">
-            <link rel="stylesheet" href="./css/style.css">
+      <link rel="stylesheet" href="./css/bootstrap.min.css">
+        <link rel="stylesheet" href="./css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="./css/style.css">
             <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
             <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script> 
         </head>
