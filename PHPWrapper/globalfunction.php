@@ -15,7 +15,7 @@ function autoload($class) {
 
 spl_autoload_register('autoload');
 
-function unsetIsEmpty() {
+function unsetIfEmpty() {
     foreach (array_keys($_POST) as $key) {
         if ($_POST[$key] == "") {
             unset($_POST[$key]);
