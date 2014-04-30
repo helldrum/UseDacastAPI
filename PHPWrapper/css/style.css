@@ -75,10 +75,41 @@ h1 {
 
 .formCreate{
     margin-top: 20px;
-    width: 205px;
+    width: 220px;
 
 }
 html {
     background-color: #FFFFFF;
 
 }
+
+
+label.valid {
+    width: 24px;
+    height: 24px;
+    background: url(assets/img/valid.png) center center no-repeat;
+    display: inline-block;
+    
+}
+label.error {
+    font-weight: bold;
+    color: red;
+    padding: 2px 8px;
+    margin-top: 2px;
+}
+
+.left {
+    display: block;
+    float: left;
+
+}
+.right{
+    display: block;
+    float: right;
+
+}
+
+.sizeTwoForm {
+    width: 670px;
+}
+
