@@ -51,7 +51,8 @@ function setDeleteLive(&$clean) {
         <link rel="stylesheet" href="./css/style.css">
     </head>
     <body>
-        <div>
+        <div class="container">
+            <h2>Delete Live</h2>
             <form value="formDelete" action = "" method = "POST">
                 <p>broadcaster id: <input type = "text" name = "bid" value = "26708"> <p>
                 <p>apikey: <input type = "text" name = "apikey" value = "7c70028b237d85cda0cc"> <p>

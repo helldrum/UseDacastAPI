@@ -3,7 +3,7 @@ include_once ($pre . "globalfunction.php");
 
 function validatePostLiveForm() {
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["Submit"])) {
+if (isset($_POST["SubmitLive"])) {
         if (isset($_POST["bid"])) {
             if (is_numeric($_POST["bid"])) {
                 if (isset($_POST["apikey"])) {
@@ -113,7 +113,6 @@ function setPostLive($clean) {
 
     $liveDao = new DAOLive($userSetting, new Live());
     $fonctionreturn = $liveDao->create($createLive);
-
     return $fonctionreturn;
 }
 ?>
@@ -131,7 +130,8 @@ function setPostLive($clean) {
     <body>
 
         <script>
-            $(document).ready(function() {
+        //jquery form validation    
+        $(document).ready(function() {
                 $("#formCreatelive").validate({
                     rules: {
                         live_id: {
@@ -173,12 +173,6 @@ function setPostLive($clean) {
                             minlength: 1,
                             maxlength: 500,
                             required: false
-                        },
-                        external_video_page:{
-                            minlength: 1,
-                            maxlength: 500,
-                            required: false
-
                         },
                         autoplay: {
                             minlength: 1,
@@ -235,16 +229,58 @@ function setPostLive($clean) {
                         $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
                     }
                 });
+               
+                $("#formCreateRate").validate({
+                    rules: {
+                        live_id: {
+                            minlength: 1,
+                            maxlength: 6,
+                            required: true
+                        },
+                        rate_id: {
+                            minlength: 1,
+                            maxlength: 6,
+                            required: true
+                        },
+                        type: {
+                            minlength: 1,
+                            maxlength: 15,
+                            required: true
+                        },
+                        price: {
+                            minlength: 1,
+                            maxlength: 6,
+                            required: true
+                        },
+                        currency: {
+                            minlength: 1,
+                            maxlength: 4,
+                            required: true
+                        },
+                        time_quantity: {
+                            minlength: 1,
+                            maxlength: 6,
+                            required: true
+
+                        }
+                    },
+                    highlight: function(element) {
+                        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                    },
+                    unhighlight: function(element) {
+                        $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                    }
+                });
             });
         </script>
-
+        <!-- Create live form-->
         <div class="container sizeTwoForm">
             <div class="formCreate  left">
                 <h2>Live Creation</h2>
                 <form id= "formCreatelive" value="formCreateLive" action="" method="POST" class="form-horizontal">
-                    <div class="form-group"><label>broadcaster id:</label> <input   class="form-control" type="text" name="bid" value="26708"> </div>
+                    <div class="form-group"><label>broadcaster id:</label> <input   class="form-control" type="number" name="bid" value="26708"> </div>
                     <div class="form-group"><label>apikey:</label> <input  class="form-control" type="text" name="apikey" value="7c70028b237d85cda0cc"> </div>
-                    <div class="form-group"><label>live_id(0 if new): </label><input class="form-control" type="text" value="0" name="live_id"> </div>             
+                    <div class="form-group"><label>live_id(0 if new): </label><input class="form-control" type="number" value="0" name="live_id"> </div>             
                     <div class="form-group"><label>title: </label><input class="form-control" type="text" name="title"> </div>
                     <div class="form-group"><label>description: </label><input class="form-control" type="text" name="description"> </div>
                     <div class="form-group"><label>custom data: </label><input class="form-control" type="text" name="customData"> </div>
@@ -305,7 +341,7 @@ function setPostLive($clean) {
                     <div class="form-group "><label>player_height: </label><input class="form-control" type="number" name="player_height"> </div>
                     <div class="form-group "><label>countries_id: </label><input class="form-control" type="number" name="countries_id"> </div>
                     <div class="form-group "><label>referers_id: </label><input class="form-control" input type="number" name="referers_id"> </div>
-                    <div class="form-group "><button class="btn btn-primary" type="button submit" value="SubmitRate">Submit</button></div>
+                    <div class="form-group "><button class="btn btn-primary" type="button submit" name="SubmitLive">Submit</button></div>
                 </form>
 
                 <?php
@@ -318,6 +354,7 @@ function setPostLive($clean) {
                 }
                 ?>
             </div>
+            <!--Rate Form-->            
             <div class="right formCreate">
                 <h2>Rate creation</h2>
                 <form id= "formCreateRate" value="formCreateRate" action="" method="POST" class="form-horizontal">
@@ -325,25 +362,24 @@ function setPostLive($clean) {
                     <div class="form-group"><label>apikey:</label> <input  class="form-control" type="text" name="apikey" value="7c70028b237d85cda0cc"></div>
                     <div class="form-group"><label>live_id(can't be set to 0): </label><input class="form-control" type="text" name="live_id"></div>  
                     <div class="form-group "><label>rate_id: </label><input class="form-control" type="text" value="0" name="rate_id"> </div>
-                  
-                      <div class="form-group"><label>type: </label>
+
+                    <div class="form-group"><label>type: </label>
                         <select class="form-control" name="type">
                             <option value="payperview" selected="true" >payperview</option>
                             <option value="subscription">subscription</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group "><label>price: </label><input class="form-control" type="number" name="price"> </div>
-                                 
+
                     <div class="form-group"><label>currency: </label>
                         <select class="form-control" name="currency">
                             <option value="USD" selected="true" >US Dollar</option>
                             <option value="EUR">Euro</option>
                         </select>
                     </div>
-                    
                     <div class="form-group "><label>time_quantity: </label><input class="form-control" type="number" name="time_quantity"> </div>
-                           <div class="form-group"><label>time_unit: </label>
+                    <div class="form-group"><label>time_unit: </label>
                         <select class="form-control" name="time_unit">
                             <option value="min" selected="true">minute</option>
                             <option value="hour">hour</option>
@@ -354,10 +390,8 @@ function setPostLive($clean) {
                             <option value="biannual">biannual</option>
                         </select>
                     </div>
-                    <div class="form-group "><button class="btn btn-primary" type="button submit" value="Submit">Submit</button></div>
-
+                    <div class="form-group"><button class="btn btn-primary" type="button submit" value="SubmitRate">Submit</button></div>
                 </form>
-
             </div>
         </div>
     </body>
