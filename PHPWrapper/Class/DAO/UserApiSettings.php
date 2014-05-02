@@ -11,13 +11,21 @@ class UserApiSettings {
     private $_ApiKey;
 
     function __construct($broadcasterID, $ApiKey) {
+        if (isset($broadcasterID)) {
+            if (is_numeric($broadcasterID)) {
+                if(isset($ApiKey)){
 
-        if (is_numeric($broadcasterID)) {
-
-            $this->_broadcasterID = $broadcasterID;
-            $this->_ApiKey = $ApiKey;
+                $this->_broadcasterID = $broadcasterID;
+                $this->_ApiKey = $ApiKey;
+                }else{
+                     trigger_error("API Key is not set in UsersApiSettings.", E_USER_WARNING);
+                }
+            } else {
+                trigger_error("Brodcaster_id is not numeric in UsersApiSettings.", E_USER_WARNING);
+            }
         } else {
-            trigger_error("BID is not numeric.", E_USER_WARNING);
+
+            trigger_error("Brodcaster_id is not set in UsersApiSettings.", E_USER_WARNING);
         }
     }
 
