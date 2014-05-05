@@ -104,6 +104,141 @@ class Live {
         $this->_backup_url = $backup_url;
     }
 
+    public function setExternal_video_page($external_video_page) {
+        $this->external_video_page = $external_video_page;
+    }
+
+    public function setLiveId($id) {
+        $this->_live_id = $id;
+    }
+
+    public function setTitle($title) {
+        $this->_title = $title;
+    }
+
+    public function setDescription($description) {
+        $this->_description = $description;
+    }
+
+    public function setCustom_data($custom_data) {
+        $this->_custom_data = $custom_data;
+    }
+
+    public function setOnline($online) {
+        $this->_online = $online;
+    }
+
+    public function setStream_type($stream_type) {
+        $this->_stream_type = $stream_type;
+    }
+
+    public function setStream_category($stream_category) {
+        $this->_stream_category = $stream_category;
+    }
+
+    public function setUser_id($user_id) {
+        $this->_user_id = $user_id;
+    }
+
+    public function setActivateChat($activateChat) {
+        $this->_activateChat = $activateChat;
+    }
+
+    public function setAutoplay($autoplay) {
+        $this->_autoplay = $autoplay;
+    }
+
+    public function setPlayer_width($player_width) {
+        $this->_player_width = $player_width;
+    }
+
+    public function setPlayer_height($player_height) {
+        $this->_player_height = $player_height;
+    }
+
+    public function setReferers_id($referers_id) {
+        $this->_referers_id = $referers_id;
+    }
+
+    public function setCountries_id($countries_id) {
+        $this->_countries_id = $countries_id;
+    }
+
+    public function set_currentRate($_currentRate) {
+        $this->_currentRate = $_currentRate;
+    }
+
+    public function set_TabAllRate($_TabAllRate) {
+        $this->_tabAllRate = $_TabAllRate;
+    }
+
+    public function reset_ALLRate() {
+
+        unset($this->_tabAllRate);
+    }
+
+    public function get_tabAllCoupon() {
+        return $this->_tabAllCoupon;
+    }
+
+    public function get_currentCoupon() {
+        return $this->_currentCoupon;
+    }
+
+    public function set_tabAllCoupon($_tabAllCoupon) {
+        $this->_tabAllCoupon = $_tabAllCoupon;
+    }
+
+    public function set_currentCoupon($_currentCoupon) {
+        $this->_currentCoupon = $_currentCoupon;
+    }
+
+    public function __toString() {
+
+        $toString = "live_id = $this->_live_id <br>
+    title = $this->_title <br> 
+    description = $this->_description <br>
+    custom_data = $this->_custom_data <br>
+    online = $this->_online <br>
+    stream_type = $this->_stream_type <br>
+    acquisition = $this->_acquisition <br>
+    http_url = $this->_http_url <br>
+    stream_category = $this->_stream_category <br>
+    creationDate = $this->_creationDate <br>
+    saveDate = $this->_saveDate <br>
+    user_id = $this->_user_id <br>
+    bandWidth = $this->_bandWidth <br>
+    activateChat = $this->_activateChat <br>
+    autoplay = $this->_autoplay <br>
+    noframe_security = $this->_noframe_security <br>
+    enable_ads  = $this->_enable_ads <br>
+    enable_subscription = $this->_enable_subscription <br>
+    enable_payperview = $this->_enable_payperview <br>
+    enable_coupon = $this->_enable_coupon <br>
+    is_private = $this->_is_private <br>
+    publish_on_dacast = $this->_publish_on_dacast <br>
+    external_video_page  = $this->_external_video_page <br>
+    seo_index = $this->_seo_index <br>
+    archive_filename = $this->_archive_filename <br>
+    companion_position = $this->_companion_position <br>
+    theme_id = $this->_theme_id <br>
+    watermark_position =  $this->_watermark_position <br>
+    watermark_size = $this->_watermark_size <br>
+    watermark_url = $this->_watermark_url <br>
+    id_player_size = $this->_id_player_size <br>
+    player_width = $this->_player_width <br>
+    player_height = $this->_player_height <br>
+    referers_id = $this->_referers_id <br>
+    countries_id = $this->_countries_id <br>
+    thumbnail_id = $this->_thumbnail_id <br>
+    splashscreen_id = $this->_splashscreen_id <br>
+    thumbnail_online = $this->_thumbnail_online <br>
+    hds  =$this->_hds <br>
+    hls = $this->_hls <br>
+    backup_url = $this->_backup_url <br>";
+        return $toString;
+    }
+
     public function getLive_Id() {
         return $this->_live_id;
     }
@@ -196,10 +331,6 @@ class Live {
         return $this->external_video_page;
     }
 
-    public function setExternal_video_page($external_video_page) {
-        $this->external_video_page = $external_video_page;
-    }
-
     public function getSeo_index() {
         return $this->_seo_index;
     }
@@ -260,176 +391,8 @@ class Live {
         return $this->_thumbnail_online;
     }
 
-    public function getHds() {
-        return $this->_hds;
-    }
-
-    public function getHls() {
-        return $this->_hls;
-    }
-
-    public function setLiveId($id) {
-        $this->_live_id = $id;
-    }
-
-    public function setTitle($title) {
-        $this->_title = $title;
-    }
-
-    public function setDescription($description) {
-        $this->_description = $description;
-    }
-
-    public function setCustom_data($custom_data) {
-        $this->_custom_data = $custom_data;
-    }
-
-    public function setOnline($online) {
-        $this->_online = $online;
-    }
-
-    public function setStream_type($stream_type) {
-        $this->_stream_type = $stream_type;
-    }
-
-    public function setAcquisition($acquisition) {
-        $this->_acquisition = $acquisition;
-    }
-
-    public function setHttp_url($http_url) {
-        $this->_http_url = $http_url;
-    }
-
-    public function setStream_category($stream_category) {
-        $this->_stream_category = $stream_category;
-    }
-
-    public function setCreationDate($creationDate) {
-        $this->_creationDate = $creationDate;
-    }
-
-    public function setSaveDate($saveDate) {
-        $this->_saveDate = $saveDate;
-    }
-
-    public function setUser_id($user_id) {
-        $this->_user_id = $user_id;
-    }
-
-    public function setBandWidth($bandWidth) {
-        $this->_bandWidth = $bandWidth;
-    }
-
-    public function setActivateChat($activateChat) {
-        $this->_activateChat = $activateChat;
-    }
-
-    public function setAutoplay($autoplay) {
-        $this->_autoplay = $autoplay;
-    }
-
-    public function setNoframe_security($noframe_security) {
-        $this->_noframe_security = $noframe_security;
-    }
-
-    public function setEnable_ads($enable_ads) {
-        $this->_enable_ads = $enable_ads;
-    }
-
-    public function setEnable_subscription($enable_subscription) {
-        $this->_enable_subscription = $enable_subscription;
-    }
-
-    public function setEnable_payperview($enable_payperview) {
-        $this->_enable_payperview = $enable_payperview;
-    }
-
-    public function setEnable_coupon($enable_coupon) {
-        $this->_enable_coupon = $enable_coupon;
-    }
-
-    public function setIs_private($is_private) {
-        $this->_is_private = $is_private;
-    }
-
-    public function setPublish_on_dacast($publish_on_dacast) {
-        $this->_publish_on_dacast = $publish_on_dacast;
-    }
-
-    public function setSeo_index($seo_index) {
-        $this->_seo_index = $seo_index;
-    }
-
-    public function setArchive_filename($archive_filename) {
-        $this->_archive_filename = $archive_filename;
-    }
-
-    public function setCompanion_position($companion_position) {
-        $this->_companion_position = $companion_position;
-    }
-
-    public function setTheme_id($theme_id) {
-        $this->_theme_id = $theme_id;
-    }
-
-    public function setWatermark_position($watermark_position) {
-        $this->_watermark_position = $watermark_position;
-    }
-
-    public function setWatermark_size($watermark_size) {
-        $this->_watermark_size = $watermark_size;
-    }
-
-    public function setWatermark_url($watermark_url) {
-        $this->_watermark_url = $watermark_url;
-    }
-
-    public function setId_player_size($id_player_size) {
-        $this->_id_player_size = $id_player_size;
-    }
-
-    public function setPlayer_width($player_width) {
-        $this->_player_width = $player_width;
-    }
-
-    public function setPlayer_height($player_height) {
-        $this->_player_height = $player_height;
-    }
-
-    public function setReferers_id($referers_id) {
-        $this->_referers_id = $referers_id;
-    }
-
-    public function setCountries_id($countries_id) {
-        $this->_countries_id = $countries_id;
-    }
-
-    public function setThumbnail_id($thumbnail_id) {
-        $this->_thumbnail_id = $thumbnail_id;
-    }
-
-    public function setSplashscreen_id($splashscreen_id) {
-        $this->_splashscreen_id = $splashscreen_id;
-    }
-
-    public function setThumbnail_online($thumbnail_online) {
-        $this->_thumbnail_online = $thumbnail_online;
-    }
-
-    public function setHds($hds) {
-        $this->_hds = $hds;
-    }
-
-    public function setHls($hls) {
-        $this->_hls = $hls;
-    }
-
     public function getBackup_url() {
         return $this->_backup_url;
-    }
-
-    public function setBackup_url($backup_url) {
-        $this->_backup_url = $backup_url;
     }
 
     public function get_TabAllRate() {
@@ -440,78 +403,12 @@ class Live {
         return $this->_currentRate;
     }
 
-    public function set_currentRate($_currentRate) {
-        $this->_currentRate = $_currentRate;
+    public function getHds() {
+        return $this->_hds;
     }
 
-    public function set_TabAllRate($_TabAllRate) {
-        $this->_tabAllRate = $_TabAllRate;
-    }
-
-    public function reset_ALLRate() {
-
-        unset($this->_tabAllRate);
-    }
-    public function get_tabAllCoupon() {
-        return $this->_tabAllCoupon;
-    }
-
-    public function get_currentCoupon() {
-        return $this->_currentCoupon;
-    }
-
-    public function set_tabAllCoupon($_tabAllCoupon) {
-        $this->_tabAllCoupon = $_tabAllCoupon;
-    }
-
-    public function set_currentCoupon($_currentCoupon) {
-        $this->_currentCoupon = $_currentCoupon;
-    }
-
-        public function __toString() {
-
-        $toString = "live_id = $this->_live_id <br>
-    title = $this->_title <br> 
-    description = $this->_description <br>
-    custom_data = $this->_custom_data <br>
-    online = $this->_online <br>
-    stream_type = $this->_stream_type <br>
-    acquisition = $this->_acquisition <br>
-    http_url = $this->_http_url <br>
-    stream_category = $this->_stream_category <br>
-    creationDate = $this->_creationDate <br>
-    saveDate = $this->_saveDate <br>
-    user_id = $this->_user_id <br>
-    bandWidth = $this->_bandWidth <br>
-    activateChat = $this->_activateChat <br>
-    autoplay = $this->_autoplay <br>
-    noframe_security = $this->_noframe_security <br>
-    enable_ads  = $this->_enable_ads <br>
-    enable_subscription = $this->_enable_subscription <br>
-    enable_payperview = $this->_enable_payperview <br>
-    enable_coupon = $this->_enable_coupon <br>
-    is_private = $this->_is_private <br>
-    publish_on_dacast = $this->_publish_on_dacast <br>
-    external_video_page  = $this->_external_video_page <br>
-    seo_index = $this->_seo_index <br>
-    archive_filename = $this->_archive_filename <br>
-    companion_position = $this->_companion_position <br>
-    theme_id = $this->_theme_id <br>
-    watermark_position =  $this->_watermark_position <br>
-    watermark_size = $this->_watermark_size <br>
-    watermark_url = $this->_watermark_url <br>
-    id_player_size = $this->_id_player_size <br>
-    player_width = $this->_player_width <br>
-    player_height = $this->_player_height <br>
-    referers_id = $this->_referers_id <br>
-    countries_id = $this->_countries_id <br>
-    thumbnail_id = $this->_thumbnail_id <br>
-    splashscreen_id = $this->_splashscreen_id <br>
-    thumbnail_online = $this->_thumbnail_online <br>
-    hds  =$this->_hds <br>
-    hls = $this->_hls <br>
-    backup_url = $this->_backup_url <br>";
-        return $toString;
+    public function getHls() {
+        return $this->_hls;
     }
 
 }
