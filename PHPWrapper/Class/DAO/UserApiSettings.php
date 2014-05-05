@@ -29,20 +29,20 @@ class UserApiSettings {
         }
     }
 
-    public function getBroadcasterID() {
-        return $this->_broadcasterID;
-    }
-
-    public function getApiKey() {
-        return $this->_ApiKey;
-    }
-
     public function setBroadcasterID($broadcasterID) {
         $this->_broadcasterID = $broadcasterID;
     }
 
     public function setApiKey($ApiKey) {
         $this->_ApiKey = $ApiKey;
+    }
+
+    public function getBroadcasterID() {
+        return $this->_broadcasterID;
+    }
+
+    public function getApiKey() {
+        return $this->_ApiKey;
     }
 
 }
