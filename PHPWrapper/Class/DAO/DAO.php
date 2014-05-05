@@ -39,8 +39,8 @@ interface DAO {
     public function createRateById($object_id, $rate);
 
     public function deleteRatebyId($object_id, $rate_id);
-    
-        public function getCouponbyId($object_id, $coupon_id);
+
+    public function getCouponbyId($object_id, $coupon_id);
 
     public function getAllCouponbyId($object_id);
 
