@@ -5,7 +5,7 @@
  *
  * @author Jonathan CHARDON
  */
-require_once 'KLogger.php';
+include_once 'KLogger.php';
 
 class APICall {
 
@@ -17,12 +17,29 @@ class APICall {
     private $_log;
     private $_logError;
 
-    function __construct($_apiKey, $_broadcasterId, $_url) {
+    function __construct($apiKey, $broadcasterId, $url) {
         $this->_log = new KLogger("/var/log/APICall", KLogger::INFO);
         $this->_logError = new KLogger("/var/log/error", KLogger::ERR);
-        $this->_apiKey = $_apiKey;
-        $this->_broadcasterId = $_broadcasterId;
-        $this->_url = $_url;
+
+        if (isset($apiKey)) {
+            if (isset($broadcasterId)) {
+                if (isset($url)) {
+                    $this->_apiKey = $apiKey;
+                    $this->_broadcasterId = $broadcasterId;
+                    $this->_url = $url;
+                } else {
+                    $this->_logError->logError(__LINE__ . " " . __FILE__ . "URL miss initialized");
+                    throw new InvalidArgumentException("URL miss initialized in APICall contructor.");
+                }
+            } else {
+                $this->_logError->logError(__LINE__ . " " . __FILE__ . "Broadcaster_id miss initialized in APICall contructor");
+                throw new InvalidArgumentException("Broadcaster_id miss initialized in APICall contructor.");
+            }
+        } else {
+
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "APIKey miss initialized");
+            throw new InvalidArgumentException("APIKey miss initialized in APICall contructor.");
+        }
     }
 
     public function getApiKey() {
@@ -42,14 +59,46 @@ class APICall {
     }
 
     public function setApiKey($apiKey) {
-        $this->_apiKey = $apiKey;
+        if ($apiKey == null) {
+            throw new InvalidArgumentException("Parameter APIKey can't be null for the setApiKey() function.");
+        } else {
+            if ($apiKey == "") {
+                throw new InvalidArgumentException("API Key can't be blank");
+            } else {
+                $this->_apiKey = $apiKey;
+            }
+        }
     }
 
     public function setBroadcasterId($broadcasterId) {
+        if ($broadcasterId != null) {
+            if (is_numeric($broadcasterId)) {
+                $this->_broadcasterId = $broadcasterId;
+            } else {
+                throw new UnexpectedValueException("Broadcaster_id parameter is not numeric for the setBroadcasterId() function.");
+            }
+        } else {
+
+            throw new UnexpectedValueException("Broadcaster_id parameter can't be null for the setBroadcasterId() function.");
+        }
+
         $this->_broadcasterId = $broadcasterId;
     }
 
     public function setAction($action) {
+        if ($action != null) {
+
+            if ($action == "POST" || $action == "DELETE" || $action == "GET") {
+                
+            } else {
+                throw new UnexpectedValueException("Wrong value for the setAction() function (can be POST,DELETE or GET).");
+            }
+        } else {
+
+            throw new UnexpectedValueException("Action parameter can't be null for the setAction() function.");
+        }
+
+
         $this->_action = $action;
     }
 
@@ -67,12 +116,12 @@ class APICall {
 
     function ApiRequest($action, $url) {
         $this->_log->logInfo("action = $action ; url= $url");
-
         try {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
             curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
             curl_setopt($ch, CURLOPT_VERBOSE, 1);
 
@@ -95,11 +144,14 @@ class APICall {
             curl_setopt($ch, CURLOPT_USERAGENT, "MozillaXYZ/1.0");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-
             $output = curl_exec($ch);
-            curl_close($ch);
 
             $this->_jsonDecoded = json_decode($output, true);
+
+            if (curl_errno($ch)) {
+                return 'error:' . curl_error($ch);
+            }
+            curl_close($ch);
         } catch (Exception $e) {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . " " . $e->getMessage());
             trigger_error($e->getMessage(), E_USER_WARNING);
@@ -107,7 +159,7 @@ class APICall {
     }
 
     function ApiRequestWithRawData($url) {
-        //use to make API call for the Raw return (like embed code)
+//use to make API call for the Raw return (like embed code)
         $this->_log->logInfo("GET RAW DATA url= $url");
         try {
             $ch = curl_init($url);
@@ -116,12 +168,16 @@ class APICall {
             curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_USERAGENT, "MozillaXYZ/1.0");
             curl_setopt($ch, CURLOPT_VERBOSE, 1);
 
             $output = curl_exec($ch);
 
             $this->_jsonDecoded = $output;
+            if (curl_errno($ch)) {
+                echo 'error:' . curl_error($ch);
+            }
             curl_close($ch);
         } catch (Exception $e) {
             $this->_logError->logError(__LINE__ . " " . __FILE__ . " GET RAW DATA url = " . $url . $e->getMessage());

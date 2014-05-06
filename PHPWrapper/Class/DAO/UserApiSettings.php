@@ -45,4 +45,11 @@ class UserApiSettings {
         return $this->_ApiKey;
     }
 
+    public function __toString() {
+
+        $toString = "apiKey = $this->_apiKey<br>
+            broadcasterId= $this->_broadcasterId<br>";
+        return $toString;
+    }
+
 }
