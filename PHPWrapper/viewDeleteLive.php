@@ -1,5 +1,6 @@
 <?php
 include_once ($pre . "globalfunction.php");
+include ($pre . "autoload.php");
 
 function validateDeleteForm() {
      unsetIfEmpty();

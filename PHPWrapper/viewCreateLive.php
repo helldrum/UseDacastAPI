@@ -1,9 +1,10 @@
 <?php
 include_once ($pre . "globalfunction.php");
+include ($pre . "autoload.php");
 
 function validatePostLiveForm() {
 
-if (isset($_POST["SubmitLive"])) {
+    if (isset($_POST["SubmitLive"])) {
         if (isset($_POST["bid"])) {
             if (is_numeric($_POST["bid"])) {
                 if (isset($_POST["apikey"])) {
@@ -130,8 +131,8 @@ function setPostLive($clean) {
     <body>
 
         <script>
-        //jquery form validation    
-        $(document).ready(function() {
+            //jquery form validation    
+            $(document).ready(function() {
                 $("#formCreatelive").validate({
                     rules: {
                         live_id: {
@@ -229,7 +230,7 @@ function setPostLive($clean) {
                         $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
                     }
                 });
-               
+
                 $("#formCreateRate").validate({
                     rules: {
                         live_id: {

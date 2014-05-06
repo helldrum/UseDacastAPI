@@ -1,29 +1,20 @@
-<!--
-Sample View use to show how to use the DaCast API Object Wrapper and display live information
--->
-
 
 <?php
-$prod = 0;
-$pre = '';
-if ($prod == 1) {
-    $pre = './';
-}
-
-include ($pre . "globalfunction.php");
-
-define('BID', '26708');
-define('API_KEY', '7c70028b237d85cda0cc');
-
+include ("globalfunction.php");
+include ("autoload.php");
 
 try {
-define('BID', '26708');
-define('API_KEY', '7c70028b237d85cda0cc');
+    define('BID', '26708');
+    define('API_KEY', '7c70028b237d85cda0cc');
 
     $userSettings = new UserApiSettings(BID, API_KEY);
     $live = new Live;
     $liveDao = new DAOLive($userSettings, $live);
-    $error = $liveDao->getById('43364');
+    $error = $liveDao->getById(43364);
+    if (!$error instanceof Live) {
+        echo "<p>$error</p>";
+    }
+
     $live43364 = $liveDao->get_currentObjet();
     $liveEmbedCode43364 = $liveDao->getEmbedCode(43364, "js");
     $liveFrameEmbedCode43364 = $liveDao->getEmbedCode(43364, "frame");
@@ -40,9 +31,9 @@ define('API_KEY', '7c70028b237d85cda0cc');
             <title>Display live</title>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width">
-      <link rel="stylesheet" href="./css/bootstrap.min.css">
-        <link rel="stylesheet" href="./css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="./css/style.css">
+            <link rel="stylesheet" href="./css/bootstrap.min.css">
+            <link rel="stylesheet" href="./css/bootstrap-theme.min.css">
+            <link rel="stylesheet" href="./css/style.css">
             <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
             <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script> 
         </head>
@@ -70,7 +61,7 @@ define('API_KEY', '7c70028b237d85cda0cc');
                 <div class=" container displayInfo"  ><pre class='text-info'>The div container can be dynamicly resize if you get the height and width of the player with the function $live->getPlayer_height() and $live->getPlayer_width()</pre></div>
 
                 <div class="container displayInfo" >
-                    
+
                     <span data-container="pre" data-toggle="popover" data-placement="right" data-content="$live->getDescription() function"><h2>Description:</h2><pre><?php echo $live43364->getDescription(); ?></pre></span>
 
                     <ul>
