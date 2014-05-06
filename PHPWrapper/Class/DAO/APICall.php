@@ -137,6 +137,7 @@ class APICall {
                     break;
 
                 default:
+                    throw new InvalidArgumentException ("Wrong value for the setAction() function (can be POST,DELETE or GET).");
                     break;
             }
 

@@ -92,9 +92,11 @@ class APICallTest extends PHPUnit_Framework_TestCase {
      * @todo   Implement testGetJsonDecoded().
      */
     public function testGetJsonDecoded() {
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $this->object->setJsonDecoded(null);
+        $this->assertNull($this->object->getJsonDecoded());
+
+        $this->object->setJsonDecoded('{"id": 1,"name": "A green door","price": 12.50,"tags": ["home", "green"]}');
+        $this->assertEquals('{"id": 1,"name": "A green door","price": 12.50,"tags": ["home", "green"]}', $this->object->getJsonDecoded());
     }
 
     /**
@@ -102,10 +104,27 @@ class APICallTest extends PHPUnit_Framework_TestCase {
      * @todo   Implement testApiRequest().
      */
     public function testApiRequest() {
-// Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        try {
+
+            $this->object->ApiRequest("jntgi", "http://www.trololo.com");
+        } catch (Exception $e) {
+            $this->assertEquals("Wrong value for the setAction() function (can be POST,DELETE or GET).", $e->getMessage());
+        }
+        //wrong url but good action
+        $this->object->setJsonDecoded(null);
+        $this->object->ApiRequest("GET", "http://www.myurlfake6565.com");
+        $this->assertNull($this->object->getJsonDecoded());
+
+
+        // good action, good URL need to return Array with data
+        $this->object->setJsonDecoded(null);
+        $this->object->ApiRequest("GET", "https://www.dacast.com/backend/api/live/43364?bid=26708&apikey=7c70028b237d85cda0cc");
+        $this->assertArrayHasKey("live", $this->object->getJsonDecoded());
+
+        //wrong API key, return array with error message
+        $this->object->setJsonDecoded(null);
+        $this->object->ApiRequest("GET", "https://www.dacast.com/backend/api/live/43364?bid=26708&apikey=7c70028b237d85cda0c");
+        $this->assertArrayHasKey("error", $this->object->getJsonDecoded());
     }
 
     /**
@@ -113,10 +132,20 @@ class APICallTest extends PHPUnit_Framework_TestCase {
      * @todo   Implement testApiRequestWithRawData().
      */
     public function testApiRequestWithRawData() {
-// Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $this->object->setJsonDecoded(null);
+        $this->object->ApiRequestWithRawData("https://www.dacast.com/backend/api/live/43364/embed/frame?bid=26708&apikey=7c70028b237d85cda0cc");
+        $this->assertNotNull($this->object->getJsonDecoded());
+
+        //wrong API key, return array with error message
+        $this->object->setJsonDecoded(null);
+        $this->object->ApiRequestWithRawData("https://www.dacast.com/backend/api/live/43364?bid=26708&apikey=7c70028b237d85cda0c");
+        var_dump($this->object->getJsonDecoded());
+        //$this->assertArrayHasKey("error", $this->object->getJsonDecoded());
+
+           //wrong URL
+        $this->object->setJsonDecoded(null);
+        $this->object->ApiRequestWithRawData("http://www.myurlfake6565.com");
+        $this->assertFalse($this->object->getJsonDecoded());
     }
 
     /**
@@ -130,7 +159,6 @@ class APICallTest extends PHPUnit_Framework_TestCase {
         } catch (InvalidArgumentException $e) {
             $this->assertEquals("Parameter APIKey can't be null for the setApiKey() function.", $e->getMessage());
         }
-
 
         $this->object->setApiKey("grknve9587");
         $this->assertEquals("grknve9587", $this->object->getApiKey());
