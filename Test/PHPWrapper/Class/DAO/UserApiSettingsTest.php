@@ -57,7 +57,6 @@ class UserApiSettingsTest extends PHPUnit_Framework_TestCase {
      */
     public function testGetBroadcasterID() {
         // Remove the following lines when you implement this test.
-        $this->assertNotEmpty($this->_APISettingGood->getBroadcasterID());
         $this->assertEquals($this->_APISettingGood->getBroadcasterID(), BID);
     }
 

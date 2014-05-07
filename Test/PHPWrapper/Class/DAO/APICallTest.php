@@ -44,7 +44,6 @@ class APICallTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers APICall::getApiKey
-     * @todo   Implement testGetApiKey().
      */
     public function testGetApiKey() {
         $this->assertEquals(API_KEY, $this->object->getApiKey());
@@ -52,7 +51,6 @@ class APICallTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers APICall::getBroadcasterId
-     * @todo   Implement testGetBroadcasterId().
      */
     public function testGetBroadcasterId() {
         $this->assertEquals(BID, $this->object->getBroadcasterId());
@@ -60,7 +58,6 @@ class APICallTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers APICall::getAction
-     * @todo   Implement testGetAction().
      */
     public function testGetAction() {
 
@@ -69,7 +66,6 @@ class APICallTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers APICall::getUrl
-     * @todo   Implement testGetUrl().
      */
     public function testGetUrl() {
         $this->assertEquals("https://www.dacast.com/backend/api/live/43364?bid=26708&apikey=7c70028b237d85cda0cc", $this->object->getUrl());
@@ -77,7 +73,6 @@ class APICallTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers APICall::setJsonDecoded
-     * @todo   Implement testSetJsonDecoded().
      */
     public function testSetJsonDecoded() {
         $this->object->setJsonDecoded(null);
@@ -89,7 +84,6 @@ class APICallTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers APICall::getJsonDecoded
-     * @todo   Implement testGetJsonDecoded().
      */
     public function testGetJsonDecoded() {
         $this->object->setJsonDecoded(null);
@@ -101,7 +95,6 @@ class APICallTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers APICall::ApiRequest
-     * @todo   Implement testApiRequest().
      */
     public function testApiRequest() {
         try {
@@ -129,7 +122,6 @@ class APICallTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers APICall::ApiRequestWithRawData
-     * @todo   Implement testApiRequestWithRawData().
      */
     public function testApiRequestWithRawData() {
         $this->object->setJsonDecoded(null);
@@ -150,7 +142,6 @@ class APICallTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers APICall::setApiKey
-     * @todo   Implement testSetApiKey().
      */
     public function testSetApiKey() {
         try {
@@ -166,7 +157,6 @@ class APICallTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers APICall::setBroadcasterId
-     * @todo   Implement testSetBroadcasterId().
      */
     public function testSetBroadcasterId() {
         $this->object->setBroadcasterId("358635");
@@ -188,7 +178,6 @@ class APICallTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers APICall::setAction
-     * @todo   Implement testSetAction().
      */
     public function testSetAction() {
         $this->object->setAction("POST");
@@ -214,7 +203,6 @@ class APICallTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers APICall::setUrl
-     * @todo   Implement testSetUrl().
      */
     public function testSetUrl() {
         $this->object->setUrl("https://www.dacast.com");
