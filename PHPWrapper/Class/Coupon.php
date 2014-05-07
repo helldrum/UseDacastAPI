@@ -16,20 +16,69 @@ class Coupon {
     private $_status;
     private $_user_id;
 
-    function __construct($_id=0, $_code='', $_value=0, $_currency='US', $_max=0, $_type='freepass', $_rate_type='payperview', $_media_type='channel', $_media_id=0, $_gift_type=null, $_gift_id=null, $_status=1, $_user_id=0) {
-        $this->_id = $_id;
-        $this->_code = $_code;
-        $this->_value = $_value;
-        $this->_currency = $_currency;
-        $this->_max = $_max;
-        $this->_type = $_type;
-        $this->_rate_type = $_rate_type;
-        $this->_media_type = $_media_type;
-        $this->_media_id = $_media_id;
-        $this->_gift_type = $_gift_type;
-        $this->_gift_id = $_gift_id;
-        $this->_status = $_status;
-        $this->_user_id = $_user_id;
+    function __construct($id = 0, $code = "free", $value = 0, $currency = "USD", $max = 0, $type = "freepass", $rate_type = "payperview") {
+        if (!is_numeric($id)) {
+            throw new InvalidArgumentException("Parameter live_id is not numeric in Coupon object Constructor.");
+        }
+
+        if (is_null($code)) {
+            throw new InvalidArgumentException("Parameter code can't be null in Coupon object Constructor.");
+        }
+        if (!is_numeric($value)) {
+            throw new InvalidArgumentException("Parameter value is not numeric in Coupon object Constructor.");
+        }
+
+        if ($currency != "USD" && $currency != "EUR") {
+            throw new InvalidArgumentException("Parameter currency can take only two value (\"EUR\" or \"USD\" )in Coupon object Constructor.");
+        }
+        if (!is_numeric($max)) {
+            throw new InvalidArgumentException("Parameter max is not numeric in Coupon object Constructor.");
+        }
+
+        $this->test_type($type, "Parameter type unknown in Coupon object Constructor.");
+        $this->test_RateType($rate_type, "Parameter rate_type unknown in Coupon object Constructor.");
+
+        $this->_id = $id;
+        $this->_code = $code;
+        $this->_value = $value;
+        $this->_currency = $currency;
+        $this->_max = $max;
+        $this->_type = $type;
+        $this->_rate_type = $rate_type;
+        $this->_media_type = "";
+        $this->_media_id = 0;
+        $this->_gift_type = null;
+        $this->_gift_id = null;
+        $this->_status = 1;
+        $this->_user_id = 0;
+    }
+
+    private function test_type($type, $message) {
+        switch ($type) {
+            case "discount-percent":
+                break;
+            case "discount-money":
+                break;
+            case "freepass":
+                break;
+            case "gift":
+                break;
+            default:
+                throw new InvalidArgumentException($message);
+        }
+    }
+
+    private function test_RateType($rate, $message) {
+        switch ($rate) {
+
+
+            case "payperview":
+                break;
+            case "subscription":
+                break;
+            default:
+                throw new InvalidArgumentException($message);
+        }
     }
 
     public function get_id() {
@@ -84,56 +133,83 @@ class Coupon {
         return $this->_user_id;
     }
 
-    public function set_id($_id) {
-        $this->_id = $_id;
+    public function set_id($id) {
+        if (!is_numeric($id)) {
+            throw new InvalidArgumentException("Parameter id is not numeric in function set_id() in Coupon object.");
+        }
+        $this->_id = $id;
     }
 
-    public function set_code($_code) {
-        $this->_code = $_code;
+    public function set_code($code) {
+        $this->_code = $code;
     }
 
-    public function set_value($_value) {
-        $this->_value = $_value;
+    public function set_value($value) {
+        if (!is_numeric($value)) {
+            throw new InvalidArgumentException("Parameter value is not numeric in function set_value() in Coupon Object.");
+        }
+        $this->_value = $value;
     }
 
-    public function set_currency($_currency) {
-        $this->_currency = $_currency;
+    public function set_currency($currency) {
+        if ($currency != "USD" && $currency != "EUR") {
+            throw new InvalidArgumentException("Parameter currency from function set_currency() can only take two value (\"EUR\" or \"USD\" )in Coupon object.");
+        }
+        $this->_currency = $currency;
     }
 
-    public function set_max($_max) {
-        $this->_max = $_max;
+    public function set_max($max) {
+        if (!is_numeric($max)) {
+            throw new InvalidArgumentException("Parameter max is not numeric in function set_max() in Coupon object.");
+        }
+        $this->_max = $max;
     }
 
-    public function set_type($_type) {
-        $this->_type = $_type;
+    public function set_type($type) {
+        $this->test_type($type, "Parameter type unknown from function set_type in Coupon object.");
+        $this->_type = $type;
     }
 
-    public function set_rate_type($_rate_type) {
-        $this->_rate_type = $_rate_type;
+    public function set_rate_type($rate_type) {
+        $this->test_RateType($rate_type, "Parameter rate_type unknown in Coupon object.");
+        $this->_rate_type = $rate_type;
     }
 
-    public function set_media_type($_media_type) {
-        $this->_media_type = $_media_type;
+    public function set_media_type($media_type) {
+
+        $this->_media_type = $media_type;
     }
 
-    public function set_media_id($_media_id) {
-        $this->_media_id = $_media_id;
+    public function set_media_id($media_id) {
+        if (!is_numeric($media_id)) {
+            throw new InvalidArgumentException("Parameter media_id is not numeric in function set_media_id() in Coupon object.");
+        }
+        $this->_media_id = $media_id;
     }
 
-    public function set_gift_type($_gift_type) {
-        $this->_gift_type = $_gift_type;
+    public function set_gift_type($gift_type) {
+        $this->_gift_type = $gift_type;
     }
 
-    public function set_gift_id($_gift_id) {
-        $this->_gift_id = $_gift_id;
+    public function set_gift_id($gift_id) {
+        if (!is_numeric($gift_id)) {
+            throw new InvalidArgumentException("Parameter gift_id is not numeric in function set_gift_id() in Coupon object.");
+        }
+        $this->_gift_id = $gift_id;
     }
 
-    public function set_status($_status) {
-        $this->_status = $_status;
+    public function set_status($status) {
+        if (!is_numeric($status)) {
+            throw new InvalidArgumentException("Parameter status is not numeric in function set_status() in Coupon object.");
+        }
+        $this->_status = $status;
     }
 
-    public function set_user_id($_user_id) {
-        $this->_user_id = $_user_id;
+    public function set_user_id($user_id) {
+        if (!is_numeric($user_id)) {
+            throw new InvalidArgumentException("Parameter user_id is not numeric in function set_user_id() in Coupon object.");
+        }
+        $this->_user_id = $user_id;
     }
 
 }
