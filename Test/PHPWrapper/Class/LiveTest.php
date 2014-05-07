@@ -505,17 +505,18 @@ class LiveTest extends PHPUnit_Framework_TestCase {
      * @covers Live::setOnline
      */
     public function testSetOnline() {
+        $exception = "Parameter online for setOnline funnction can only take two value (0 = online or 1 = online) in Live object.";
         try {
             $this->object->setOnline("gshfnng");
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter online for setOnline funnction can only take two value (0 = online or 1 = online) in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
 
         try {
             $this->object->setOnline("42");
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter online from setOnline function can only take two value (0 = online or 1 = online) in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
         $this->object->setOnline(1);
@@ -529,16 +530,17 @@ class LiveTest extends PHPUnit_Framework_TestCase {
      * @covers Live::setStream_type
      */
     public function testSetStream_type() {
+        $exception = "Parameter stream_type from setStream_type() function can only take two value (1 = live or 3 = radio) in Live object.";
         try {
             $this->object->setOnline(0);
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter stream_type from setStream_type() function can only take two value (1 = live or 3 = radio) in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
         try {
             $this->object->setOnline("egfyhfhfuy");
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter stream_type from setStream_type() function can only take two value (1 = live or 3 = radio) in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
         $this->object->setStream_type(1);
@@ -566,17 +568,17 @@ class LiveTest extends PHPUnit_Framework_TestCase {
      * @covers Live::setUser_id
      */
     public function testSetUser_id() {
-
+        $exception = "Parameter user_id from function setUser_id() is not numeric in Live object.";
         try {
             $this->object->setUser_id("4k6jty");
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter user_id from function setUser_id() is not numeric in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
         try {
             $this->object->setUser_id(null);
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter user_id from function setUser_id() is not numeric in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
 
@@ -588,16 +590,17 @@ class LiveTest extends PHPUnit_Framework_TestCase {
      * @covers Live::setActivateChat
      */
     public function testSetActivateChat() {
+        $exception = "Parameter activateChat from setActivateChat() function can only take two value (0 = disable or 1 = enable) in Live object.";
         try {
             $this->object->setActivateChat("42DFH");
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter activateChat from setActivateChat() function can only take two value (0 = disable or 1 = enable) in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
         try {
             $this->object->setActivateChat(42);
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter activateChat from setActivateChat() function can only take two value (0 = disable or 1 = enable) in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
         $this->object->setActivateChat(1);
@@ -611,16 +614,17 @@ class LiveTest extends PHPUnit_Framework_TestCase {
      * @covers Live::setAutoplay
      */
     public function testSetAutoplay() {
+        $exception = "Parameter autoplay from setAutoplay() function can only take two value (0 = disable or 1 = enable) in Live object.";
         try {
             $this->object->setAutoplay("42DFH");
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter autoplay from setAutoplay() function can only take two value (0 = disable or 1 = enable) in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
         try {
             $this->object->setAutoplay("33");
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter autoplay from setAutoplay() function can only take two value (0 = disable or 1 = enable) in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
         $this->object->setAutoplay(1);
@@ -662,16 +666,17 @@ class LiveTest extends PHPUnit_Framework_TestCase {
      * @covers Live::setReferers_id
      */
     public function testSetReferers_id() {
+        $exception = "Parameter referers_id from function setReferers_id() is not numeric in Live object.";
         try {
             $this->object->setReferers_id("4k6jty");
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter referers_id from function setReferers_id() is not numeric in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
         try {
             $this->object->setReferers_id(null);
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter referers_id from function setReferers_id() is not numeric in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
         $this->object->setReferers_id(1256);
@@ -682,16 +687,17 @@ class LiveTest extends PHPUnit_Framework_TestCase {
      * @covers Live::setCountries_id
      */
     public function testSetCountries_id() {
+        $exception = "Parameter countries_id from function setCountries_id() is not numeric in Live object.";
         try {
             $this->object->setCountries_id("4k6jty");
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter countries_id from function setCountries_id() is not numeric in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
         try {
             $this->object->setCountries_id(null);
         } catch (InvalidArgumentException $e) {
-            $this->assertEquals("Parameter countries_id from function setCountries_id() is not numeric in Live object.", $e->getMessage());
+            $this->assertEquals($exception, $e->getMessage());
         }
 
         $this->object->setCountries_id(12778);
