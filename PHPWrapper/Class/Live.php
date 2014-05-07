@@ -512,15 +512,23 @@ class Live {
     }
 
     public function set_currentRate($_currentRate) {
+
+        if (!($_currentRate instanceof Rate)) {
+            throw new InvalidArgumentException("Parameter currentRate from function set_currentRate() is not an instance of Rate in Live object.");
+        }
         $this->_currentRate = $_currentRate;
     }
 
     public function set_TabAllRate($_TabAllRate) {
+        foreach ($_TabAllRate as $rate) {
+            if (!($rate instanceof Rate)) {
+                throw new InvalidArgumentException("One attribute of the parameter TabAllRate from the function set_TabAllRate() is not an instance of Rate in Live object.");
+            }
+        }
         $this->_tabAllRate = $_TabAllRate;
     }
 
     public function reset_ALLRate() {
-
         unset($this->_tabAllRate);
     }
 
@@ -533,10 +541,19 @@ class Live {
     }
 
     public function set_tabAllCoupon($_tabAllCoupon) {
+        foreach ($_tabAllCoupon as $coupon) {
+            if (!($coupon instanceof Coupon)) {
+                throw new InvalidArgumentException("One attribute of the parameter TabAllCoupon from the function set_TabAllCoupon() is not an instance of Coupon in Live object.");
+            }
+        }
         $this->_tabAllCoupon = $_tabAllCoupon;
     }
 
     public function set_currentCoupon($_currentCoupon) {
+
+        if (!($_currentCoupon instanceof Coupon)) {
+            throw new InvalidArgumentException("Parameter currentCoupon from function set_currentCoupon() is not an instance of Coupon in Live object.");
+        }
         $this->_currentCoupon = $_currentCoupon;
     }
 

@@ -68,6 +68,8 @@ class LiveTest extends PHPUnit_Framework_TestCase {
         }
         //init default Live
         $this->object = new Live;
+        $this->object->set_currentRate(new Rate);
+        $this->object->set_currentCoupon(new Coupon);
     }
 
     /**
@@ -442,19 +444,9 @@ class LiveTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers Live::get_TabAllRate
-     */
-    public function testGet_TabAllRate() {
-        $this->assertNull($this->object->get_TabAllRate());
-    }
-
-    /**
      * @covers Live::get_currentRate
      */
     public function testGet_currentRate() {
-
-        $this->assertNull($this->object->get_currentRate());
-        $this->object->set_currentRate(new Rate);
         $this->assertInstanceOf(Rate, $this->object->get_currentRate());
     }
 
@@ -690,95 +682,126 @@ class LiveTest extends PHPUnit_Framework_TestCase {
      * @covers Live::setCountries_id
      */
     public function testSetCountries_id() {
-        // dfgh
+        try {
+            $this->object->setCountries_id("4k6jty");
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals("Parameter countries_id from function setCountries_id() is not numeric in Live object.", $e->getMessage());
+        }
+
+        try {
+            $this->object->setCountries_id(null);
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals("Parameter countries_id from function setCountries_id() is not numeric in Live object.", $e->getMessage());
+        }
+
+        $this->object->setCountries_id(12778);
+        $this->assertEquals(12778, $this->object->getCountries_id());
     }
 
     /**
      * @covers Live::set_currentRate
-     * @todo   Implement testSet_currentRate().
      */
     public function testSet_currentRate() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        try {
+            $this->object->set_currentRate(new Coupon);
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals("Parameter currentRate from function set_currentRate() is not an instance of Rate in Live object.", $e->getMessage());
+        }
+
+        $rate = new Rate(0, "payperview", 20, "EUR", 10, 200);
+        $this->object->set_currentRate($rate);
+        $this->assertSame($rate, $this->object->get_currentRate());
     }
 
     /**
      * @covers Live::set_TabAllRate
-     * @todo   Implement testSet_TabAllRate().
      */
     public function testSet_TabAllRate() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $tabrateMissInit = array();
+        $tabrateMissInit[] = new Rate(0, "payperview", 20, "EUR", 10, 200);
+        $tabrateMissInit[] = new Coupon;
+
+        try {
+            $this->object->set_TabAllRate($tabrateMissInit);
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals("One attribute of the parameter TabAllRate from the function set_TabAllRate() is not an instance of Rate in Live object.", $e->getMessage());
+        }
+
+        $tabrate = array();
+        $tabrate[] = new Rate(0, "payperview", 20, "EUR", 10, 200);
+        $tabrate[] = new Rate(0, "payperview", 30, "US", 20, 100);
+        $this->object->set_TabAllRate($tabrate);
+
+        $this->assertSame($tabrate, $this->object->get_TabAllRate());
+    }
+
+    /**
+     * @covers Live::get_TabAllRate
+     */
+    public function testGet_TabAllRate() {
+        foreach ($this->object->get_TabAllRate() as $rate) {
+            $this->assertInstanceOf(Rate, $rate);
+        }
     }
 
     /**
      * @covers Live::reset_ALLRate
-     * @todo   Implement testReset_ALLRate().
      */
     public function testReset_ALLRate() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Live::get_tabAllCoupon
-     * @todo   Implement testGet_tabAllCoupon().
-     */
-    public function testGet_tabAllCoupon() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $this->object->reset_ALLRate();
+        $this->assertNull($this->object->get_TabAllRate());
     }
 
     /**
      * @covers Live::get_currentCoupon
-     * @todo   Implement testGet_currentCoupon().
      */
     public function testGet_currentCoupon() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $this->assertInstanceOf(Coupon, $this->object->get_currentCoupon());
     }
 
     /**
      * @covers Live::set_tabAllCoupon
-     * @todo   Implement testSet_tabAllCoupon().
      */
     public function testSet_tabAllCoupon() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $tabcouponMissInit = array();
+        $tabcouponMissInit[] = new Coupon;
+        $tabcouponMissInit[] = new Rate(0, "payperview", 20, "EUR", 10, 200);
+
+        try {
+            $this->object->set_tabAllCoupon($tabcouponMissInit);
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals("One attribute of the parameter TabAllCoupon from the function set_TabAllCoupon() is not an instance of Coupon in Live object.", $e->getMessage());
+        }
+
+        $tabcoupon = array();
+        $tabcoupon[] = new Coupon;
+        $tabcoupon[] = new Coupon(0, "PLOP", 10, "USD", 10);
+        $this->object->set_tabAllCoupon($tabcoupon);
+        $this->assertSame($tabcoupon, $this->object->get_tabAllCoupon());
+    }
+
+    /**
+     * @covers Live::get_tabAllCoupon
+     */
+    public function testGet_tabAllCoupon() {
+        foreach ($this->object->get_currentCoupon() as $coupon) {
+            $this->assertInstanceOf(Coupon, $coupon);
+        }
     }
 
     /**
      * @covers Live::set_currentCoupon
-     * @todo   Implement testSet_currentCoupon().
      */
     public function testSet_currentCoupon() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-    }
+        try {
+            $this->object->set_currentCoupon(new Coupon);
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals("Parameter currentCoupon from function set_currentCoupon() is not an instance of Coupon in Live object.", $e->getMessage());
+        }
 
-    /**
-     * @covers Live::__toString
-     * @todo   Implement test__toString().
-     */
-    public function test__toString() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $coupon = new Coupon(0, "code", 10, "EUR", 10, "freepass", "payperview", "channel");
+        $this->object->set_currentCoupon($coupon);
+        $this->assertSame($coupon, $this->object->get_currentCoupon());
     }
 
 }
