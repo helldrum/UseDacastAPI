@@ -1,4 +1,5 @@
 <?php
+
 include_once ("PHPWrapper/autoload.php");
 
 /**
@@ -21,7 +22,7 @@ class UserApiSettingsTest extends PHPUnit_Framework_TestCase {
      * @expectedException PHPUnit_Framework_Error
      */
     protected function setUp() {
-        
+
         $this->_APISettingGood = new UserApiSettings(BID, API_KEY);
 
         try {
@@ -41,6 +42,11 @@ class UserApiSettingsTest extends PHPUnit_Framework_TestCase {
         } catch (InvalidArgumentException $e) {
             $this->assertEquals("APIKey is not set in UsersApiSettings.", $e->getMessage());
         }
+        try {
+            new UserApiSettings(BID, "serkueruj");
+        } catch (LengthException $e) {
+            $this->assertEquals("Length of APIKey need to be 20 characters.", $e->getMessage());
+        }
     }
 
     /**
@@ -53,7 +59,6 @@ class UserApiSettingsTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers UserApiSettings::getBroadcasterID
-     * @todo   Implement testGetBroadcasterID().
      */
     public function testGetBroadcasterID() {
         // Remove the following lines when you implement this test.
@@ -62,7 +67,6 @@ class UserApiSettingsTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers UserApiSettings::getApiKey
-     * @todo   Implement testGetApiKey().
      */
     public function testGetApiKey() {
         // Remove the following lines when you implement this test.
@@ -72,22 +76,20 @@ class UserApiSettingsTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers UserApiSettings::setBroadcasterID
-     * @todo   Implement testSetBroadcasterID().
      */
     public function testSetBroadcasterID() {
         // Remove the following lines when you implement this test.
-        $this->_APISettingGood->setBroadcasterID("42");
-        $this->assertEquals($this->_APISettingGood->getBroadcasterID(), "42");
+        $this->_APISettingGood->setBroadcasterID("36563657");
+        $this->assertEquals($this->_APISettingGood->getBroadcasterID(), "36563657");
     }
 
     /**
      * @covers UserApiSettings::setApiKey
-     * @todo   Implement testSetApiKey().
      */
     public function testSetApiKey() {
         // Remove the following lines when you implement this test.
-        $this->_APISettingGood->setApiKey("42hgrhnuyucghj");
-        $this->assertEquals($this->_APISettingGood->getApiKey(), "42hgrhnuyucghj");
+        $this->_APISettingGood->setApiKey("3g467hgrhnuyucghj");
+        $this->assertEquals($this->_APISettingGood->getApiKey(), "4rfg5ehgrhnuyucghj");
     }
 
 }

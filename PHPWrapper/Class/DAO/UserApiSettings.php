@@ -14,9 +14,12 @@ class UserApiSettings {
         if (isset($broadcasterID)) {
             if (is_numeric($broadcasterID)) {
                 if (isset($ApiKey)) {
-
-                    $this->_broadcasterID = $broadcasterID;
-                    $this->_ApiKey = $ApiKey;
+                    if (strlen($ApiKey) == 20) {
+                        $this->_broadcasterID = $broadcasterID;
+                        $this->_ApiKey = $ApiKey;
+                    } else {
+                        throw new LengthException("Length of APIKey need to be 20 characters.");
+                    }
                 } else {
                     throw new InvalidArgumentException("APIKey is not set in UsersApiSettings.");
                 }

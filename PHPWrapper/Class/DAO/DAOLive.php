@@ -1,14 +1,13 @@
 <?php
 
+include "DAO.php";
+
 /**
  * This class is use to interact with the Live function API: SELECT, CREATE, UPDATE, DELETE 
  * get embed code, and manage coupon and rates.
  *
  * @author Jonathan CHARDON
  */
-include_once ($pre . "globalfunction.php");
-require_once 'KLogger.php';
-
 class DAOLive implements DAO {
 
     private $_APICall;
@@ -27,11 +26,11 @@ class DAOLive implements DAO {
 
             $this->_currentLive = new Live();
         }
-        if (isset($userSettings) && ($userSettings instanceof UserApiSettings)) {
+        if (($userSettings instanceof UserApiSettings)) {
             $this->_userSettings = $userSettings;
         } else {
-            $this->_logError->logError(__LINE__ . " " . __FILE__ . "UserSetting miss initialized in DAOLive contructor" . print_r($userSettings, true) . $e->getMessage());
-            trigger_error("userSetting miss initialized in DAOLive contructor.", E_USER_WARNING);
+            $this->_logError->logError(__LINE__ . " " . __FILE__ . "Parameter userSetting is not a instance of  UserAPISettings in DAOLive contructor." . print_r($userSettings, true));
+            throw new InvalidArgumentException("Parameter userSetting is not a instance of  UserAPISettings in DAOLive contructor.");
         }
     }
 
@@ -51,8 +50,12 @@ class DAOLive implements DAO {
         $this->_userSettings = $userSettings;
     }
 
-    public function reset_tabAllLive() {
-        unset($this->_tabAllLive);
+    public function get_tabAllLive() {
+        return $this->_tabAllLive;
+    }
+
+    public function get_tabAllRate() {
+        unset($this->_tabAllRate);
     }
 
     public function reset_tabAllRate() {
@@ -185,6 +188,9 @@ class DAOLive implements DAO {
         $tabBuffLive;
         if (isset($Arraydecoded)) {
             foreach ($Arraydecoded['live'] as $i => $decoded) {
+                $fd = fopen("log.txt", "a+");
+                fwrite($fd, "{" .$decoded["id"]."    ". $decoded["activateChat"] . "}");
+                fclose($fd);
 
                 $buffLive->setLiveId($decoded["id"]);
                 $buffLive->setTitle($decoded["title"]);
@@ -598,19 +604,19 @@ class DAOLive implements DAO {
     }
 
     public function deleteRatebyId($live_id, $rate_id) {
-        
+
         $inputCorrect = $this->testDeleteRateByIdInput($live_id, $rate_id);
         if ($inputCorrect) {
             $this->_fullUrlCall = self::API_URL . "/" . $live_id .
                     "/rate/" . $rate_id .
                     "?bid=" . $this->_userSettings->getBroadcasterID() .
                     "&apikey=" . $this->_userSettings->getApiKey();
-            
+
             $this->_APICall = new APICall($this->_userSettings->getApiKey(), $this->_userSettings->getBroadcasterID(), $this->_fullUrlCall);
             $this->_APICall->ApiRequest("DELETE", $this->_fullUrlCall);
 
             $decoded = $this->_APICall->getJsonDecoded();
-            
+
             if (isset($decoded['error']['message'])) {
                 $message = "Error :  " . $decoded['error']['message'];
                 $this->_logError->logError(__LINE__ . " " . __FILE__ . "Error :  " . $decoded['error']['message']);
@@ -645,7 +651,7 @@ class DAOLive implements DAO {
     }
 
     public function getCouponbyId($live_id, $coupon_id) {
-     //   throw new Exception('pending function wrong return');
+        //   throw new Exception('pending function wrong return');
         $inputCorrect = $this->testgetCouponbyIdInput($live_id, $coupon_id);
         if ($inputCorrect) {
             $this->_fullUrlCall = self::API_URL . "/" . $live_id .

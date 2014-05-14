@@ -60,7 +60,7 @@ class Live {
     private $_currentCoupon;
 
     function __construct($id = 0, $title = "", $description = "", $custom_data = "", $online = 0, $stream_type = 1, $stream_category = 20, $activateChat = 0, $user_id = 0, $autoplay = 0, $publish_on_dacast = 1, $external_video_page = "", $player_width = null, $player_height = null, $referers_id = 0, $countries_id = 0) {
-        
+
         if (!is_numeric($id)) {
             throw new InvalidArgumentException("Parameter live_id is not numeric in Live object Constructor.");
         }
@@ -85,7 +85,7 @@ class Live {
         if (!is_numeric($autoplay)) {
             throw new InvalidArgumentException("Parameter autoplay is not numeric in Live object Constructor.");
         }
-    
+
         $this->id = $id;
         $this->_title = $title;
         $this->_description = $description;
@@ -310,16 +310,16 @@ class Live {
     }
 
     public function setOnline($online) {
-        if ($online != 0 && $online != 1) {
-            throw new InvalidArgumentException("Parameter online from setOnline function can only take two value (0 = online or 1 = online) in Live object.");
+        if ($online != 0 && $online != 1 && $online != -1) {
+            throw new InvalidArgumentException("Parameter online from setOnline function can only take the value (0 = offline, 1 = online or -1= disable) in Live object.");
         }
 
         $this->_online = $online;
     }
 
     public function setStream_type($stream_type) {
-        if ($stream_type != 3 && $stream_type != 1) {
-            throw new InvalidArgumentExceptionException("Parameter stream_type from setStream_type() function can only take two value (1 = live or 3 = radio) in Live object.", $e->getMessage());
+        if ($stream_type != 1 && $stream_type != 3) {
+            throw new InvalidArgumentException("Parameter stream_type from setStream_type() function can only take two value (1= video 3= radio) in Live object.");
         }
         $this->_stream_type = $stream_type;
     }
@@ -359,7 +359,6 @@ class Live {
     }
 
     public function setActivateChat($activateChat) {
-
         if ($activateChat != 0 && $activateChat != 1) {
             throw new InvalidArgumentException("Parameter activateChat from setActivateChat() function can only take two value (0 = disable or 1 = enable) in Live object.");
         }
@@ -368,7 +367,7 @@ class Live {
 
     public function setAutoplay($autoplay) {
         if ($autoplay != 0 && $autoplay != 1) {
-            throw new InvalidArgumentException("Parameter autoplay from setAutoplay() function can only take two value (0 = disable or 1 = enable) in Live object.");
+            throw new InvalidArgumentException("Parameter autoplay from setAutoplay() function can only take two value (0 = disable or 1 = enable ) in Live object.");
         }
         $this->_autoplay = $autoplay;
     }

@@ -186,8 +186,8 @@ class LiveTest extends PHPUnit_Framework_TestCase {
      */
     public function testGetUser_id() {
         $this->assertEquals(0, $this->object->getUser_id());
-        $this->object->setUser_id(42);
-        $this->assertEquals(42, $this->object->getUser_id());
+        $this->object->setUser_id(3564758);
+        $this->assertEquals(3564758, $this->object->getUser_id());
     }
 
     /**
@@ -505,7 +505,7 @@ class LiveTest extends PHPUnit_Framework_TestCase {
      * @covers Live::setOnline
      */
     public function testSetOnline() {
-        $exception = "Parameter online from setOnline function can only take two value (0 = online or 1 = online) in Live object.";
+        $exception = "Parameter online from setOnline function can only take the value (0 = offline, 1 = online or -1= disable) in Live object.";
         try {
             $this->object->setOnline("gshfnng");
         } catch (InvalidArgumentException $e) {
@@ -614,15 +614,15 @@ class LiveTest extends PHPUnit_Framework_TestCase {
      * @covers Live::setAutoplay
      */
     public function testSetAutoplay() {
-        $exception = "Parameter autoplay from setAutoplay() function can only take two value (0 = disable or 1 = enable) in Live object.";
+        $exception = "Parameter autoplay from setAutoplay() function can only take two value (0 = disable or 1 = enable 4=playlist) in Live object.";
         try {
-            $this->object->setAutoplay("42DFH");
+            $this->object->setAutoplay("32DFH");
         } catch (InvalidArgumentException $e) {
             $this->assertEquals($exception, $e->getMessage());
         }
 
         try {
-            $this->object->setAutoplay("33");
+            $this->object->setAutoplay("23");
         } catch (InvalidArgumentException $e) {
             $this->assertEquals($exception, $e->getMessage());
         }
