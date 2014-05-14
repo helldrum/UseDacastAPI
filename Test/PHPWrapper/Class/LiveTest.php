@@ -505,7 +505,7 @@ class LiveTest extends PHPUnit_Framework_TestCase {
      * @covers Live::setOnline
      */
     public function testSetOnline() {
-        $exception = "Parameter online for setOnline funnction can only take two value (0 = online or 1 = online) in Live object.";
+        $exception = "Parameter online from setOnline function can only take two value (0 = online or 1 = online) in Live object.";
         try {
             $this->object->setOnline("gshfnng");
         } catch (InvalidArgumentException $e) {
@@ -714,7 +714,7 @@ class LiveTest extends PHPUnit_Framework_TestCase {
             $this->assertEquals("Parameter currentRate from function set_currentRate() is not an instance of Rate in Live object.", $e->getMessage());
         }
 
-        $rate = new Rate(0, "payperview", 20, "EUR", 10, 200);
+        $rate = new Rate(0, "payperview", 20, "EUR", 10, "min");
         $this->object->set_currentRate($rate);
         $this->assertSame($rate, $this->object->get_currentRate());
     }
@@ -724,7 +724,7 @@ class LiveTest extends PHPUnit_Framework_TestCase {
      */
     public function testSet_TabAllRate() {
         $tabrateMissInit = array();
-        $tabrateMissInit[] = new Rate(0, "payperview", 20, "EUR", 10, 200);
+        $tabrateMissInit[] = new Rate(0, "payperview", 20, "EUR", 10, "min");
         $tabrateMissInit[] = new Coupon;
 
         try {
@@ -734,8 +734,8 @@ class LiveTest extends PHPUnit_Framework_TestCase {
         }
 
         $tabrate = array();
-        $tabrate[] = new Rate(0, "payperview", 20, "EUR", 10, 200);
-        $tabrate[] = new Rate(0, "payperview", 30, "US", 20, 100);
+        $tabrate[] = new Rate(0, "payperview", 20, "EUR", 10, "min");
+        $tabrate[] = new Rate(0, "payperview", 30, "USD", 20, "min");
         $this->object->set_TabAllRate($tabrate);
 
         $this->assertSame($tabrate, $this->object->get_TabAllRate());
@@ -771,7 +771,7 @@ class LiveTest extends PHPUnit_Framework_TestCase {
     public function testSet_tabAllCoupon() {
         $tabcouponMissInit = array();
         $tabcouponMissInit[] = new Coupon;
-        $tabcouponMissInit[] = new Rate(0, "payperview", 20, "EUR", 10, 200);
+        $tabcouponMissInit[] = new Rate(0, "payperview", 20, "EUR", 10, "min");
 
         try {
             $this->object->set_tabAllCoupon($tabcouponMissInit);

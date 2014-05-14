@@ -60,6 +60,7 @@ class Live {
     private $_currentCoupon;
 
     function __construct($id = 0, $title = "", $description = "", $custom_data = "", $online = 0, $stream_type = 1, $stream_category = 20, $activateChat = 0, $user_id = 0, $autoplay = 0, $publish_on_dacast = 1, $external_video_page = "", $player_width = null, $player_height = null, $referers_id = 0, $countries_id = 0) {
+        
         if (!is_numeric($id)) {
             throw new InvalidArgumentException("Parameter live_id is not numeric in Live object Constructor.");
         }
@@ -84,9 +85,7 @@ class Live {
         if (!is_numeric($autoplay)) {
             throw new InvalidArgumentException("Parameter autoplay is not numeric in Live object Constructor.");
         }
-
-//, $seo_index = 1, $archive_filename = null, $companion_position = "right", $theme_id = null, $watermark_position = 0, $watermark_size = 0, $watermark_url = null, $id_player_size = 0,
-//, $thumbnail_id = null, $splashscreen_id = null, $thumbnail_online = null, $hds = null, $hls = null, $backup_url = ''       
+    
         $this->id = $id;
         $this->_title = $title;
         $this->_description = $description;
