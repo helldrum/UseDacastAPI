@@ -10,10 +10,6 @@ function main() {
     $VOD_id = myVOD;
 
     $data = curlWrap("/" . $VOD_id . "?bid=" . BID . "&apikey=" . APIKEY, null, "GET") or die("<p>can return the data !<p>");
-    var_dump($data);
-    
-    
-    
     
     if (isset($data)) {
         echo 'id : ' . $data->vod->id . '<br>';
