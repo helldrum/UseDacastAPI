@@ -1,16 +1,20 @@
 <?php
 
-define("APIKEY", "YourAPIKey");
+define("APIKEY", "MyAPIKey");
 define("URL", "https://www.dacast.com/backend/api/vod");
-define("BID", "yourBroadcasterID");
+define("BID", "MyBID");
 
 main();
 
 function main() {
-    $VOD_id = YouVODId;
+    $VOD_id = myVOD;
 
     $data = curlWrap("/" . $VOD_id . "?bid=" . BID . "&apikey=" . APIKEY, null, "GET") or die("<p>can return the data !<p>");
-
+    var_dump($data);
+    
+    
+    
+    
     if (isset($data)) {
         echo 'id : ' . $data->vod->id . '<br>';
         echo 'title : ' . $data->vod->title . '<br>';
@@ -26,7 +30,9 @@ function curlWrap($url, $json, $action) {
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
     curl_setopt($ch, CURLOPT_URL, URL . $url);
-    curl_setopt($ch, CURLOPT_CAINFO, "cacert.pem");
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_VERBOSE, 1);
 
     switch ($action) {
         case "POST":
@@ -52,6 +58,9 @@ function curlWrap($url, $json, $action) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
     $output = curl_exec($ch);
+    if ($output === false) {
+        echo 'Curl error: ' . curl_error($ch);
+    }
 
     curl_close($ch);
     $decoded = json_decode($output);
